@@ -19,10 +19,12 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final KafkaProducerService kafkaProducerService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, KafkaProducerService kafkaProducerService) {
         this.productRepository = productRepository;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     public ProductDto createProduct(CreateProductRequest request) {
@@ -35,7 +37,8 @@ public class ProductService {
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
         Product saved = productRepository.save(product);
-        // TODO: Publish Kafka event here (stub)
+        // Publish product created event
+        kafkaProducerService.publishProductCreated(saved.getId(), saved.getName(), saved.getCategory().name());
         return toDto(saved);
     }
 
@@ -68,7 +71,8 @@ public class ProductService {
         if (request.getStockQuantity() != null) product.setStockQuantity(request.getStockQuantity());
         product.setUpdatedAt(LocalDateTime.now());
         Product saved = productRepository.save(product);
-        // TODO: Publish Kafka event here (stub)
+        // Publish product updated event
+        kafkaProducerService.publishProductUpdated(saved.getId(), saved.getName(), saved.getCategory().name());
         return toDto(saved);
     }
 
@@ -76,8 +80,11 @@ public class ProductService {
         if (!productRepository.existsById(id)) {
             throw new ProductNotFoundException(id);
         }
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
         productRepository.deleteById(id);
-        // TODO: Publish Kafka event here (stub)
+        // Publish product deleted event
+        kafkaProducerService.publishProductDeleted(product.getId(), product.getName(), product.getCategory().name());
     }
 
     public ProductDto updateStock(Long id, Integer quantity) {
@@ -86,7 +93,8 @@ public class ProductService {
         product.setStockQuantity(quantity);
         product.setUpdatedAt(LocalDateTime.now());
         Product saved = productRepository.save(product);
-        // TODO: Publish Kafka event here (stub)
+        // Publish product updated event (stock change)
+        kafkaProducerService.publishProductUpdated(saved.getId(), saved.getName(), saved.getCategory().name());
         return toDto(saved);
     }
 

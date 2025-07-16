@@ -20,10 +20,12 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final KafkaProducerService kafkaProducerService;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, KafkaProducerService kafkaProducerService) {
         this.orderRepository = orderRepository;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     @Transactional
@@ -49,7 +51,8 @@ public class OrderService {
         order.setTotalAmount(items.stream().map(OrderItem::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
 
         Order saved = orderRepository.save(order);
-        // TODO: Publish Kafka event here (stub)
+        // Publish order created event
+        kafkaProducerService.publishOrderCreated(saved.getId(), saved.getUserId(), saved.getTotalAmount());
         return toDto(saved);
     }
 
@@ -66,7 +69,13 @@ public class OrderService {
         order.setStatus(status);
         order.setUpdatedAt(LocalDateTime.now());
         Order saved = orderRepository.save(order);
-        // TODO: Publish Kafka event here (stub)
+        // Publish order updated event
+        kafkaProducerService.publishOrderUpdated(saved.getId(), saved.getUserId(), saved.getStatus().name());
+        
+        // If order is completed, publish completion event
+        if (status == OrderStatus.DELIVERED) {
+            kafkaProducerService.publishOrderCompleted(saved.getId(), saved.getUserId(), saved.getTotalAmount());
+        }
         return toDto(saved);
     }
 
