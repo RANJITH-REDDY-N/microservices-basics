@@ -72,7 +72,7 @@ mvn spring-boot:run
   - Order Service: http://localhost:8083/swagger-ui.html
 - GraphQL Playground (Product Service): http://localhost:8082/graphiql
 - GraphQL Endpoint (Product Service): http://localhost:8082/graphql
-- Kafka Broker: localhost:9092
+- Kafka Broker: http://localhost:9092
 - Kafka UI: http://localhost:9080
 
 ## Project Structure
