@@ -1,8 +1,8 @@
 package com.microservices.apigateway.config;
 
 import com.microservices.apigateway.loadbalancer.WeightedRoundRobinLoadBalancer;
-import org.springframework.cloud.client.loadbalancer.reactive.ReactorServiceInstanceLoadBalancer;
-import org.springframework.cloud.client.loadbalancer.ServiceInstanceListSupplier;
+import org.springframework.cloud.loadbalancer.core.ReactorServiceInstanceLoadBalancer;
+import org.springframework.cloud.loadbalancer.core.ServiceInstanceListSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.ObjectProvider;

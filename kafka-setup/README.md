@@ -50,7 +50,7 @@ docker-compose logs -f
 ### Verification
 - Kafka: localhost:9092
 - Zookeeper: localhost:2181
-- Kafka UI: http://localhost:8080 (if configured)
+- Kafka UI: http://localhost:9080 (if configured)
 
 ## Configuration
 
@@ -102,7 +102,7 @@ services:
     depends_on:
       - kafka
     ports:
-      - "8080:8080"
+      - "9080:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092

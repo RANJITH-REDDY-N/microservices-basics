@@ -5,6 +5,11 @@ spring:
   application:
     name: eureka-server
 
+logging:
+  level:
+    com.netflix.eureka: WARN
+    com.netflix.discovery: WARN
+
 eureka:
   client:
     register-with-eureka: false

@@ -23,6 +23,7 @@ This project implements a complete microservices ecosystem with:
 | Product Service | 8082 | Product catalog with GraphQL |
 | Order Service | 8083 | Order processing and management |
 | Kafka | 9092 | Message broker for async communication |
+| Kafka UI | 9080 | Kafka monitoring UI |
 
 ## Quick Start
 
@@ -62,13 +63,17 @@ mvn spring-boot:run
 ```
 
 ### 3. Verify Services
+
 - Eureka Dashboard: http://localhost:8761
 - API Gateway: http://localhost:8080
-- Swagger UI: 
+- Swagger UI:
   - User Service: http://localhost:8081/swagger-ui.html
   - Product Service: http://localhost:8082/swagger-ui.html
   - Order Service: http://localhost:8083/swagger-ui.html
-- GraphQL: http://localhost:8080/graphql
+- GraphQL Playground (Product Service): http://localhost:8082/graphiql
+- GraphQL Endpoint (Product Service): http://localhost:8082/graphql
+- Kafka Broker: localhost:9092
+- Kafka UI: http://localhost:9080
 
 ## Project Structure
 
@@ -229,9 +234,7 @@ Client → API Gateway → Product Service (GraphQL)
 
 ## Documentation
 
-- [PROJECT_ARCHITECTURE.md](PROJECT_ARCHITECTURE.md) - Complete architecture overview
-- [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) - Step-by-step implementation guide
-- Service-specific READMEs - Individual service documentation
+- All documentation is now consolidated in this README.
 
 ## Success Criteria
 

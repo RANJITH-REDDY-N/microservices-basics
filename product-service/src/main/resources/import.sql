@@ -1,6 +1,5 @@
-INSERT INTO product (id, name, description, price, category, stock_quantity, created_at, updated_at) VALUES
-  (1, 'Laptop', 'High performance laptop', 1200.00, 'ELECTRONICS', 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  (2, 'Smartphone', 'Latest model smartphone', 800.00, 'ELECTRONICS', 25, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  (3, 'Desk Chair', 'Ergonomic office chair', 150.00, 'FURNITURE', 30, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  (4, 'Coffee Mug', 'Ceramic mug', 12.99, 'KITCHEN', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  (5, 'Notebook', 'A5 lined notebook', 3.50, 'STATIONERY', 200, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP); 
+INSERT INTO product (id, name, description, price, category, stock_quantity, created_at, updated_at) VALUES (1, 'Laptop', 'High performance laptop', 1200.00, 'ELECTRONICS', 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO product (id, name, description, price, category, stock_quantity, created_at, updated_at) VALUES (2, 'Smartphone', 'Latest model smartphone', 800.00, 'ELECTRONICS', 25, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO product (id, name, description, price, category, stock_quantity, created_at, updated_at) VALUES (3, 'Desk Chair', 'Ergonomic office chair', 150.00, 'FURNITURE', 30, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO product (id, name, description, price, category, stock_quantity, created_at, updated_at) VALUES (4, 'Coffee Mug', 'Ceramic mug', 12.99, 'KITCHEN', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO product (id, name, description, price, category, stock_quantity, created_at, updated_at) VALUES (5, 'Notebook', 'A5 lined notebook', 3.50, 'STATIONERY', 200, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP); 
