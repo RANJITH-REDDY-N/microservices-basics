@@ -66,6 +66,13 @@
             <version>2.2.0</version>
         </dependency>
 
+        <!-- Altair GraphQL Playground -->
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>altair-spring-boot-starter</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

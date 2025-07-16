@@ -70,8 +70,10 @@ mvn spring-boot:run
   - User Service: http://localhost:8081/swagger-ui.html
   - Product Service: http://localhost:8082/swagger-ui.html
   - Order Service: http://localhost:8083/swagger-ui.html
-- GraphQL Playground (Product Service): http://localhost:8082/graphiql
+- GraphQL Playground (Product Service): http://localhost:8082/altair
 - GraphQL Endpoint (Product Service): http://localhost:8082/graphql
+- GraphQL Playground (Order Service): http://localhost:8083/altair
+- GraphQL Endpoint (Order Service): http://localhost:8083/graphql
 - Kafka Broker: http://localhost:9092
 - Kafka UI: http://localhost:9080
 
