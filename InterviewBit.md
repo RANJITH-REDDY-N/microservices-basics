@@ -630,7 +630,256 @@ API Gateway solves these problems by providing:
 
 ### API Gateway: Code Examples
 
-// ... (move all code examples for API Gateway here, including YAML, Java, etc.)
+#### 1. Spring Cloud Gateway Route Configuration (YAML)
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/auth/**, /api/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: user-service-circuit-breaker
+                fallbackUri: forward:/fallback/user-service
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/products/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: product-service-circuit-breaker
+                fallbackUri: forward:/fallback/product-service
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: order-service-circuit-breaker
+                fallbackUri: forward:/fallback/order-service
+        - id: graphql
+          uri: lb://product-service
+          predicates:
+            - Path=/graphql
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: graphql-circuit-breaker
+                fallbackUri: forward:/fallback/graphql
+```
+
+#### 2. application.properties (relevant parts)
+
+```properties
+server.port=8080
+spring.application.name=api-gateway
+
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+eureka.client.enabled=true
+
+jwt.secret=your-jwt-secret
+
+rate.limit.requests-per-minute=30
+
+spring.cloud.gateway.discovery.locator.enabled=true
+spring.cloud.gateway.discovery.locator.lower-case-service-id=true
+
+# Circuit Breaker Configuration (Resilience4j)
+resilience4j.circuitbreaker.configs.default.sliding-window-size=10
+resilience4j.circuitbreaker.configs.default.minimum-number-of-calls=5
+resilience4j.circuitbreaker.configs.default.failure-rate-threshold=50
+resilience4j.circuitbreaker.configs.default.wait-duration-in-open-state=5s
+resilience4j.circuitbreaker.configs.default.permitted-number-of-calls-in-half-open-state=3
+
+# CORS Configuration
+spring.cloud.gateway.globalcors.cors-configurations.[/**].allowed-origins=http://localhost:3000
+spring.cloud.gateway.globalcors.cors-configurations.[/**].allowed-methods=GET,POST,PUT,DELETE,OPTIONS
+spring.cloud.gateway.globalcors.cors-configurations.[/**].allowed-headers=*
+spring.cloud.gateway.globalcors.cors-configurations.[/**].allow-credentials=true
+```
+
+#### 3. JwtAuthenticationFilter.java
+
+```java
+@Component
+public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
+    @Value("${jwt.secret:secret-key}")
+    private String jwtSecret;
+    // ...
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        ServerHttpRequest request = exchange.getRequest();
+        String path = request.getPath().toString();
+        if (isPublicEndpoint(path)) {
+            return chain.filter(exchange);
+        }
+        String token = extractToken(request);
+        if (token == null || !validateToken(token)) {
+            return unauthorized(exchange.getResponse());
+        }
+        Claims claims = getClaims(token);
+        if (claims == null) {
+            return unauthorized(exchange.getResponse());
+        }
+        ServerHttpRequest modifiedRequest = request.mutate()
+                .header("X-User-Id", claims.getSubject())
+                .header("X-User-Role", claims.get("role", String.class))
+                .build();
+        return chain.filter(exchange.mutate().request(modifiedRequest).build());
+    }
+    // ...
+}
+```
+
+#### 4. RateLimitingFilter.java
+
+```java
+@Component
+public class RateLimitingFilter implements GlobalFilter, Ordered {
+    @Value("${rate.limit.requests-per-minute:60}")
+    private int requestsPerMinute;
+    // ...
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        // ...
+    }
+    // ...
+}
+```
+
+#### 5. RoleAuthorizationFilter.java
+
+```java
+@Component
+public class RoleAuthorizationFilter implements GlobalFilter, Ordered {
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        // ...
+    }
+    @Override
+    public int getOrder() {
+        return 0; // Run after JwtAuthenticationFilter
+    }
+}
+```
+
+#### 6. LoadBalancerConfig.java
+
+```java
+@Configuration
+public class LoadBalancerConfig {
+    @Bean
+    public ReactorServiceInstanceLoadBalancer productServiceLoadBalancer(
+            ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
+            LoadBalancerWeightsProperties weightsProperties) {
+        return new WeightedRoundRobinLoadBalancer(
+                serviceInstanceListSupplierProvider.getIfAvailable(),
+                "product-service",
+                weightsProperties
+        );
+    }
+    // ... beans for user-service and order-service
+}
+```
+
+#### 7. LoadBalancerWeightsProperties.java
+
+```java
+@Configuration
+@ConfigurationProperties(prefix = "loadbalancer.weights")
+public class LoadBalancerWeightsProperties {
+    private Map<String, Map<String, Integer>> services = new HashMap<>();
+    // ... getters and setters ...
+}
+```
+
+#### 8. WeightedRoundRobinLoadBalancer.java (class signature and description)
+
+```java
+/**
+ * Weighted Round Robin Load Balancer for Spring Cloud Gateway.
+ * Uses weights from LoadBalancerWeightsProperties to distribute requests.
+ */
+public class WeightedRoundRobinLoadBalancer implements ReactorServiceInstanceLoadBalancer {
+    // ... implementation ...
+}
+```
+
+#### 9. FallbackController.java
+
+```java
+@RestController
+@RequestMapping("/fallback")
+public class FallbackController {
+    @GetMapping("/user-service")
+    public ResponseEntity<Map<String, Object>> userServiceFallback() { /* ... */ }
+    @GetMapping("/product-service")
+    public ResponseEntity<Map<String, Object>> productServiceFallback() { /* ... */ }
+    @GetMapping("/order-service")
+    public ResponseEntity<Map<String, Object>> orderServiceFallback() { /* ... */ }
+    @GetMapping("/graphql")
+    public ResponseEntity<Map<String, Object>> graphqlFallback() { /* ... */ }
+}
+```
+
+#### 10. pom.xml (relevant dependencies)
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-gateway</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.11.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.11.5</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.11.5</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
+#### 11. ApiGatewayApplication.java
+
+```java
+@SpringBootApplication
+public class ApiGatewayApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(ApiGatewayApplication.class, args);
+    }
+}
+```
 
 ---
 
@@ -697,8 +946,6 @@ Google's authentication system works similarly. When you log into Gmail, the aut
 
 ### User Service: Code Examples
 
-// All code examples for User Service (JWT implementation, password security, API endpoints, Kafka integration, etc.) moved here from above.
-
 #### JWT Token Generation
 
 ```java
@@ -706,15 +953,12 @@ Google's authentication system works similarly. When you log into Gmail, the aut
 public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
-
     @Value("${jwt.expiration}")
     private Long expiration;
-
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userDetails.getUsername());
     }
-
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
             .setClaims(claims)
@@ -733,37 +977,31 @@ public class JwtUtil {
 @Component
 public class PasswordEncoder {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
     public String encode(String password) {
         return encoder.encode(password);
     }
-
     public boolean matches(String rawPassword, String encodedPassword) {
         return encoder.matches(rawPassword, encodedPassword);
     }
 }
 ```
 
-#### API Endpoints
+#### API Endpoints (REST)
 
-- **POST /api/auth/register** - User registration
-- **POST /api/auth/login** - User authentication
-- **GET /api/users/profile** - Get user profile (protected)
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User authentication
+- `GET /api/users/profile` - Get user profile (protected)
 
-#### Kafka Integration
-
-The User Service publishes events to Kafka for asynchronous communication:
+#### Kafka Integration (Producer)
 
 ```java
 @Service
 public class KafkaProducerService {
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
-
     public void publishUserCreatedEvent(UserDto user) {
         kafkaTemplate.send("user-events", "user.created", user);
     }
-
     public void publishUserUpdatedEvent(UserDto user) {
         kafkaTemplate.send("user-events", "user.updated", user);
     }
@@ -886,7 +1124,102 @@ The Product Service manages the product catalog with both REST and GraphQL APIs:
 
 ### Product Service: Code Examples
 
-// ... (move all code examples for Product Service here, including GraphQL schema, Java resolvers, REST endpoints, Kafka integration, etc.)
+#### GraphQL Schema
+
+```graphql
+type Product {
+  id: ID!
+  name: String!
+  description: String
+  price: Float!
+  category: ProductCategory!
+  stockQuantity: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum ProductCategory {
+  ELECTRONICS
+  CLOTHING
+  BOOKS
+  HOME
+  SPORTS
+}
+
+type Query {
+  products: [Product!]!
+  product(id: ID!): Product
+  productsByCategory(category: ProductCategory!): [Product!]!
+}
+
+type Mutation {
+  createProduct(input: CreateProductInput!): Product!
+  updateProduct(id: ID!, input: UpdateProductInput!): Product!
+  deleteProduct(id: ID!): Boolean!
+}
+
+input CreateProductInput {
+  name: String!
+  description: String
+  price: Float!
+  category: ProductCategory!
+  stockQuantity: Int!
+}
+
+input UpdateProductInput {
+  name: String
+  description: String
+  price: Float
+  category: ProductCategory
+  stockQuantity: Int
+}
+```
+
+#### Java GraphQL Resolver Example
+
+```java
+@Component
+public class ProductQueryResolver implements GraphQLQueryResolver {
+    @Autowired
+    private ProductService productService;
+    public List<Product> products() {
+        return productService.getAllProducts();
+    }
+    public Product product(Long id) {
+        return productService.getProductById(id);
+    }
+    public List<Product> productsByCategory(ProductCategory category) {
+        return productService.getProductsByCategory(category);
+    }
+}
+```
+
+#### REST API Endpoints
+
+- `POST /api/products` - Create product
+- `GET /api/products/{id}` - Get product by ID
+- `GET /api/products` - List all products
+- `PUT /api/products/{id}` - Update product
+- `DELETE /api/products/{id}` - Delete product
+
+#### Kafka Integration (Producer)
+
+```java
+@Service
+public class KafkaProducerService {
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
+    public void publishProductCreatedEvent(ProductDto product) {
+        kafkaTemplate.send("product-events", "product.created", product);
+    }
+    public void publishProductUpdatedEvent(ProductDto product) {
+        kafkaTemplate.send("product-events", "product.updated", product);
+    }
+    public void publishProductDeletedEvent(Long productId) {
+        kafkaTemplate.send("product-events", "product.deleted", productId);
+    }
+}
+```
 
 ---
 
@@ -1134,7 +1467,43 @@ Instead of services calling each other directly, they publish events (messages) 
 
 ### Kafka: Code Examples
 
-// ... (move all code examples for Kafka here, including YAML, Java, etc.)
+#### Kafka Producer Example (Java)
+
+```java
+@Service
+public class KafkaProducerService {
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
+    public void publishEvent(String topic, Object event) {
+        kafkaTemplate.send(topic, event);
+    }
+}
+```
+
+#### Kafka Consumer Example (Java)
+
+```java
+@Service
+public class KafkaConsumerService {
+    @KafkaListener(topics = "user-events", groupId = "order-service-group")
+    public void handleUserEvents(String message) {
+        // Handle user events (user created, updated, etc.)
+    }
+    @KafkaListener(topics = "product-events", groupId = "order-service-group")
+    public void handleProductEvents(String message) {
+        // Handle product events (product updated, deleted, etc.)
+    }
+}
+```
+
+#### Kafka Topic Configuration (Shell)
+
+```sh
+# Create topics for user, product, and order events
+kafka-topics.sh --create --topic user-events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+kafka-topics.sh --create --topic product-events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+kafka-topics.sh --create --topic order-events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+```
 
 ---
 
