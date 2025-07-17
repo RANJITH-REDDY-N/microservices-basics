@@ -1,9 +1,11 @@
 # Microservices Architecture - Complete Technical Documentation
 
 ## Table of Contents
-1. [Eureka Server - Service Discovery](#eureka-server---service-discovery)2 Gateway - Centralized Routing](#api-gateway---centralized-routing)
-3e - Authentication & Authorization](#user-service---authentication--authorization)
-4. [Product Service - Product Catalog](#product-service---product-catalog)5. [Order Service - Order Management](#order-service---order-management)
+1. [Eureka Server | Service Discovery](#eureka-server---service-discovery)
+2. [API Gateway | Centralized Routing](#api-gateway---centralized-routing)
+3. [User-service | Authentication & Authorization](#user-service---authentication--authorization)
+4. [Product Service - Product Catalog](#product-service---product-catalog)
+5. [Order Service - Order Management](#order-service---order-management)
 6. [Kafka Integration - Asynchronous Communication](#kafka-integration---asynchronous-communication)
 7. [Architecture Patterns & Best Practices](#architecture-patterns--best-practices)
 8. [Testing Strategy](#testing-strategy)
