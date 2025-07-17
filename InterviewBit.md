@@ -3145,32 +3145,96 @@ This architecture is designed to be scalable, maintainable, and extensible, foll
 ### Overall Architecture Overview
 
 ```mermaid
+
 graph TD
-  Client[Client (Web/App)]
-  subgraph Infrastructure
-    Eureka[Eureka Service Discovery]
-    Kafka[Kafka Broker]
-    Gateway[API Gateway]
-  end
-  subgraph Services
-    User[User Service]
-    Product[Product Service]
-    Order[Order Service]
-  end
-  Client --> Gateway
-  Gateway -->|REST/GraphQL| User
-  Gateway -->|REST/GraphQL| Product
-  Gateway -->|REST/GraphQL| Order
-  Gateway --> Eureka
-  User -- Registers/Discovers --> Eureka
-  Product -- Registers/Discovers --> Eureka
-  Order -- Registers/Discovers --> Eureka
-  User -- Publishes Events --> Kafka
-  Product -- Publishes Events --> Kafka
-  Order -- Publishes Events --> Kafka
-  User -- Consumes Events --> Kafka
-  Product -- Consumes Events --> Kafka
-  Order -- Consumes Events --> Kafka
+    %% ========== Clients ==========
+    Client["📱 Client Applications"] -->|HTTP Requests| LB
+    
+    %% ========== Edge Layer ==========
+    subgraph EdgeLayer["🛡️ Edge Layer (Entry Point)"]
+        LB["⚖️ Load Balancer"] -->|Routes Requests| Gateway
+        Gateway["🚪 API Gateway<br>🔌 Circuit Breaker<br>⏱️ Rate Limiting<br>🔐 Auth/JWT<br>🔄 Retry Policies"]
+    end
+    
+    %% ========== Service Discovery & Config ==========
+    subgraph ServiceInfra["⚙️ Service Infrastructure"]
+        Eureka["🔍 Eureka Server<br>(Service Discovery)"]
+        Config["⚙️ Config Server<br>(Centralized Config)"]
+    end
+    
+    %% ========== Business Services ==========
+    subgraph Microservices["🛠️ Business Microservices"]
+        UserSvc["👤 User Service<br>🔐 AuthN/AuthZ<br>📊 User Profile"]
+        ProductSvc["📦 Product Service<br>🧮 Inventory<br>🏷️ Pricing"] 
+        OrderSvc["🛒 Order Service<br>💳 Payments<br>📦 Fulfillment"]
+    end
+    
+    %% ========== Data Stores ==========
+    subgraph Databases["💾 Data Layer"]
+        UserDB["🗄️ User DB<br>(PostgreSQL)"]
+        ProductDB["🗄️ Product DB<br>(MongoDB)"]
+        OrderDB["🗄️ Order DB<br>(MySQL)"]
+    end
+    
+    %% ========== Event Bus ==========
+    subgraph EventBus["📡 Event Streaming"]
+        Kafka["⚡ Apache Kafka<br>📨 Event Bus<br>🔄 CQRS Pattern"]
+    end
+    
+    %% ========== Monitoring ==========
+    subgraph Observability["👀 Observability"]
+        Prometheus["📊 Prometheus (Metrics)"]
+        Grafana["📈 Grafana (Dashboards)"]
+        Zipkin["🔍 Zipkin (Distributed Tracing)"]
+    end
+    
+    %% ========== Connections ==========
+    %% API Gateway to Services
+    Gateway -->|Routes to| UserSvc
+    Gateway -->|Routes to| ProductSvc
+    Gateway -->|Routes to| OrderSvc
+    
+    %% Services to Databases
+    UserSvc -->|Persistence| UserDB
+    ProductSvc -->|Persistence| ProductDB
+    OrderSvc -->|Persistence| OrderDB
+    
+    %% Service Discovery
+    UserSvc -.->|Registers| Eureka
+    ProductSvc -.->|Registers| Eureka
+    OrderSvc -.->|Registers| Eureka
+    Gateway -.->|Discovers| Eureka
+    
+    %% Configuration
+    UserSvc -.->|Gets Config| Config
+    ProductSvc -.->|Gets Config| Config
+    OrderSvc -.->|Gets Config| Config
+    
+    %% Event Streaming
+    UserSvc -->|Publishes| Kafka
+    ProductSvc -->|Publishes| Kafka
+    OrderSvc -->|Publishes| Kafka
+    
+    Kafka -->|Consumes| UserSvc
+    Kafka -->|Consumes| ProductSvc
+    Kafka -->|Consumes| OrderSvc
+    
+    %% Monitoring
+    UserSvc -->|Metrics| Prometheus
+    ProductSvc -->|Metrics| Prometheus
+    OrderSvc -->|Metrics| Prometheus
+    Prometheus -->|Visualizes| Grafana
+    Gateway -->|Traces| Zipkin
+    
+    %% ========== Visual Improvements ==========
+    style EdgeLayer fill:#f0f8ff,stroke:#4682b4
+    style ServiceInfra fill:#f5f5dc,stroke:#d2b48c
+    style Microservices fill:#e6e6fa,stroke:#9370db
+    style Databases fill:#f0fff0,stroke:#3cb371
+    style EventBus fill:#fff0f5,stroke:#db7093
+    style Observability fill:#fffacd,stroke:#ffa500
+    
+    classDef default width:150px,height:80px
 ```
 
 ---
