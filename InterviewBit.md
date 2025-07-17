@@ -3146,6 +3146,7 @@ This architecture is designed to be scalable, maintainable, and extensible, foll
 
 ```mermaid
 graph TD
+  Client[Client (Web/App)]
   subgraph Infrastructure
     Eureka[Eureka Service Discovery]
     Kafka[Kafka Broker]
@@ -3156,7 +3157,6 @@ graph TD
     Product[Product Service]
     Order[Order Service]
   end
-  Client[Client (Web/App)]
   Client --> Gateway
   Gateway -->|REST/GraphQL| User
   Gateway -->|REST/GraphQL| Product
