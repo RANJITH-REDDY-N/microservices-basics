@@ -15,6 +15,16 @@
 
 ## Eureka Server - Service Discovery
 
+```mermaid
+graph TD
+  Client["Client"] -->|Service Request| APIGateway["API Gateway"]
+  APIGateway -->|Service Lookup| Eureka["Eureka Server"]
+  Eureka -->|Service List| APIGateway
+  APIGateway -->|Route Request| UserService["User Service"]
+  APIGateway -->|Route Request| ProductService["Product Service"]
+  APIGateway -->|Route Request| OrderService["Order Service"]
+```
+
 ### What is Eureka? (Conceptual Overview)
 
 **Technical Definition:**
@@ -536,7 +546,17 @@ spec:
 
 ## API Gateway - Centralized Routing & Cross-Cutting Concerns
 
-### What is an API Gateway? (Conceptual Overview)
+```mermaid
+graph TD
+  Client["Client"] --> APIGateway["API Gateway"]
+  APIGateway -->|/api/users| UserService["User Service"]
+  APIGateway -->|/api/products| ProductService["Product Service"]
+  APIGateway -->|/api/orders| OrderService["Order Service"]
+  APIGateway -->|/graphql| ProductService
+  APIGateway -->|Service Discovery| Eureka["Eureka Server"]
+```
+
+### What is the API Gateway? (Conceptual Overview)
 
 **Technical Definition:**
 An API Gateway is a reverse proxy that acts as a single entry point for all client requests, routing them to appropriate microservices while providing cross-cutting concerns like authentication, logging, and rate limiting.
@@ -615,6 +635,16 @@ API Gateway solves these problems by providing:
 ---
 
 ## User Service - Authentication & Authorization
+
+```mermaid
+graph TD
+  Client["Client"] -->|Login/Register| UserService["User Service"]
+  UserService -->|JWT Token| Client
+  Client -->|Authenticated Request + JWT| APIGateway["API Gateway"]
+  APIGateway -->|Forward| UserService
+  APIGateway -->|Forward| ProductService
+  APIGateway -->|Forward| OrderService
+```
 
 ### What is the User Service? (Conceptual Overview)
 
@@ -744,6 +774,14 @@ public class KafkaProducerService {
 
 ## Product Service - Product Catalog
 
+```mermaid
+graph TD
+  Client["Client"] -->|REST/GraphQL| ProductService["Product Service"]
+  ProductService -->|CRUD| Database["Product DB"]
+  ProductService -->|Events| Kafka["Kafka"]
+  ProductService -->|Category| CategoryDB["Category DB"]
+```
+
 ### What is the Product Service? (Conceptual Overview)
 
 **Technical Definition:**
@@ -853,6 +891,15 @@ The Product Service manages the product catalog with both REST and GraphQL APIs:
 ---
 
 ## Order Service - Order Management
+
+```mermaid
+graph TD
+  Client["Client"] -->|Create Order| OrderService["Order Service"]
+  OrderService -->|Check| ProductService["Product Service"]
+  OrderService -->|Check| UserService["User Service"]
+  OrderService -->|Events| Kafka["Kafka"]
+  OrderService -->|CRUD| OrderDB["Order DB"]
+```
 
 ### What is the Order Service? (Conceptual Overview)
 
@@ -980,6 +1027,16 @@ public enum OrderStatus {
 ---
 
 ## Kafka Integration - Asynchronous Communication
+
+```mermaid
+graph TD
+  ProductService["Product Service"] -->|Publish Event| Kafka["Kafka"]
+  OrderService["Order Service"] -->|Publish Event| Kafka
+  UserService["User Service"] -->|Publish Event| Kafka
+  Kafka -->|Consume Event| OrderService
+  Kafka -->|Consume Event| ProductService
+  Kafka -->|Consume Event| UserService
+```
 
 ### What is Kafka? (Conceptual Overview)
 
@@ -1175,6 +1232,15 @@ Netflix uses these patterns to handle millions of users. When you stream a movie
 
 ## Testing Strategy
 
+```mermaid
+graph TD
+  Pyramid["Testing Pyramid"]
+  Pyramid --> Unit["Unit Tests (Base)"]
+  Pyramid --> Integration["Integration Tests"]
+  Pyramid --> Contract["Contract Tests"]
+  Pyramid --> E2E["End-to-End Tests (Top)"]
+```
+
 ### What is Testing Strategy? (Conceptual Overview)
 
 **Technical Definition:**
@@ -1306,6 +1372,15 @@ class EndToEndTest {
 ---
 
 ## Deployment & Operations
+
+```mermaid
+graph TD
+  Dev["Developer"] -->|Push Code| CI["CI/CD Pipeline"]
+  CI -->|Build & Test| Docker["Docker Image"]
+  Docker -->|Deploy| K8s["Kubernetes Cluster"]
+  K8s -->|Run| Services["Microservices"]
+  Services -->|Monitor| Monitoring["Monitoring/Logging"]
+```
 
 ### What is Deployment & Operations? (Conceptual Overview)
 
