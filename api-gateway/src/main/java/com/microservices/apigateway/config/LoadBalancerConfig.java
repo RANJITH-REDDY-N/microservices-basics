@@ -25,5 +25,25 @@ public class LoadBalancerConfig {
         );
     }
 
-    // To add for other services, duplicate the above bean with the appropriate serviceId.
+    @Bean
+    public ReactorServiceInstanceLoadBalancer userServiceLoadBalancer(
+            ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
+            LoadBalancerWeightsProperties weightsProperties) {
+        return new WeightedRoundRobinLoadBalancer(
+                serviceInstanceListSupplierProvider.getIfAvailable(),
+                "user-service",
+                weightsProperties
+        );
+    }
+
+    @Bean
+    public ReactorServiceInstanceLoadBalancer orderServiceLoadBalancer(
+            ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
+            LoadBalancerWeightsProperties weightsProperties) {
+        return new WeightedRoundRobinLoadBalancer(
+                serviceInstanceListSupplierProvider.getIfAvailable(),
+                "order-service",
+                weightsProperties
+        );
+    }
 } 

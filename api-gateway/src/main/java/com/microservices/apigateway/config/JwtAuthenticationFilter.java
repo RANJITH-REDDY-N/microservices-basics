@@ -26,6 +26,8 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
     private String jwtSecret;
 
     private static final List<String> PUBLIC_ENDPOINTS = List.of(
+            "/api/users/register",
+            "/api/users/login",
             "/api/auth/register",
             "/api/auth/login",
             "/actuator",

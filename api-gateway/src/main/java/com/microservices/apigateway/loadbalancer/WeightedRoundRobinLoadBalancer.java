@@ -37,7 +37,17 @@ public class WeightedRoundRobinLoadBalancer implements ReactorServiceInstanceLoa
 
     @Override
     public Mono<Response<ServiceInstance>> choose(Request request) {
-        return serviceInstanceListSupplier.get().next().map(this::selectInstance);
+        if (serviceInstanceListSupplier == null) {
+            // Log a warning if you want
+            return Mono.just(new EmptyResponse());
+        }
+        return serviceInstanceListSupplier.get().next().map(instances -> {
+            if (instances == null || instances.isEmpty()) {
+                return new EmptyResponse();
+            }
+            // Always return the first instance (disable LB for now)
+            return new DefaultResponse(instances.get(0));
+        });
     }
 
     private Response<ServiceInstance> selectInstance(List<ServiceInstance> instances) {

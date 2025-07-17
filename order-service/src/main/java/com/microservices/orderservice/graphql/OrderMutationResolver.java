@@ -18,7 +18,7 @@ public class OrderMutationResolver {
     }
 
     @MutationMapping
-    public OrderDto updateOrderStatus(@Argument Long id, @Argument OrderStatus status) {
-        return orderService.updateOrderStatus(id, status);
+    public OrderDto updateOrderStatus(@Argument Long id, @Argument OrderStatus status, @Argument Long userId, @Argument String role) {
+        return orderService.updateOrderStatus(id, status, userId, role);
     }
 } 

@@ -11,6 +11,8 @@ import com.microservices.orderservice.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,11 +23,15 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final KafkaProducerService kafkaProducerService;
+    private final RestTemplate restTemplate;
+    @Value("${product.service.url:http://api-gateway:8080/api/products}")
+    private String productServiceUrl;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, KafkaProducerService kafkaProducerService) {
+    public OrderService(OrderRepository orderRepository, KafkaProducerService kafkaProducerService, RestTemplate restTemplate) {
         this.orderRepository = orderRepository;
         this.kafkaProducerService = kafkaProducerService;
+        this.restTemplate = restTemplate;
     }
 
     @Transactional
@@ -62,17 +68,48 @@ public class OrderService {
         return toDto(order);
     }
 
+    public List<OrderDto> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId).stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    public List<OrderDto> getAllOrders() {
+        return orderRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    }
+
     @Transactional
-    public OrderDto updateOrderStatus(Long id, OrderStatus status) {
+    public OrderDto updateOrderStatus(Long id, OrderStatus status, Long requestUserId, String requestUserRole) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
+        boolean isOwner = order.getUserId().equals(requestUserId);
+        boolean isAdminOrManager = "ADMIN".equals(requestUserRole) || "MODERATOR".equals(requestUserRole);
+
+        // Ownership/role enforcement
+        if (status == OrderStatus.CANCELLED) {
+            if (!(isOwner || isAdminOrManager)) {
+                throw new RuntimeException("Only the order owner or admin/manager can cancel the order.");
+            }
+        } else if (status == OrderStatus.CONFIRMED) {
+            if (!isAdminOrManager) {
+                throw new RuntimeException("Only admin/manager can confirm orders.");
+            }
+            // Stock check logic
+            for (OrderItem item : order.getOrderItems()) {
+                String url = productServiceUrl + "/" + item.getProductId();
+                ProductStockResponse product = restTemplate.getForObject(url, ProductStockResponse.class);
+                if (product == null || product.getStockQuantity() < item.getQuantity()) {
+                    throw new RuntimeException("Insufficient stock for product: " + item.getProductName());
+                }
+            }
+            // Optionally, call Product Service to decrement stock here or rely on event
+        } else if (status == OrderStatus.DELIVERED || status == OrderStatus.SHIPPED) {
+            if (!isAdminOrManager) {
+                throw new RuntimeException("Only admin/manager can update to delivered/shipped.");
+            }
+        }
         order.setStatus(status);
         order.setUpdatedAt(LocalDateTime.now());
         Order saved = orderRepository.save(order);
-        // Publish order updated event
         kafkaProducerService.publishOrderUpdated(saved.getId(), saved.getUserId(), saved.getStatus().name());
-        
-        // If order is completed, publish completion event
         if (status == OrderStatus.DELIVERED) {
             kafkaProducerService.publishOrderCompleted(saved.getId(), saved.getUserId(), saved.getTotalAmount());
         }
@@ -101,5 +138,15 @@ public class OrderService {
         dto.setUnitPrice(item.getUnitPrice());
         dto.setTotalPrice(item.getTotalPrice());
         return dto;
+    }
+
+    // Helper class for product stock response
+    private static class ProductStockResponse {
+        private Long id;
+        private String name;
+        private int stockQuantity;
+        public int getStockQuantity() { return stockQuantity; }
+        public void setStockQuantity(int stockQuantity) { this.stockQuantity = stockQuantity; }
+        // getters/setters for id, name
     }
 } 
