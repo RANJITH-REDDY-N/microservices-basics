@@ -3126,13 +3126,78 @@ public class RateLimitingFilter extends OncePerRequestFilter [object Object]
 
 ## Conclusion
 
-This microservices architecture demonstrates a comprehensive implementation of modern distributed systems patterns. The key components work together to provide:
+This microservices architecture demonstrates a comprehensive, production-ready implementation of modern distributed systems patterns. The key components work together to provide:
 
-1. **Service Discovery**: Eureka enables dynamic service registration and discovery
-2. **Centralized Routing**: API Gateway provides single entry point with advanced features
-3. **Authentication**: JWT-based security across all services4nous Communication**: Kafka enables loose coupling and scalability
-5**Flexible APIs**: Both REST and GraphQL support
-6g**: Comprehensive health checks and metrics
-7ilience**: Circuit breakers and fault tolerance
+- **Service Discovery:** Eureka enables dynamic registration and discovery of all services, supporting scalability and resilience.
+- **Centralized Routing:** The API Gateway acts as a single entry point, providing advanced routing, load balancing, authentication, rate limiting, and circuit breaker features.
+- **Authentication & Authorization:** JWT-based security ensures secure, stateless authentication and fine-grained role-based access control across all services.
+- **Asynchronous Communication:** Kafka enables event-driven, loosely coupled communication between services, supporting scalability and fault tolerance.
+- **Flexible APIs:** Both REST and GraphQL APIs are supported, allowing clients to choose the most efficient way to access data.
+- **Health Monitoring & Observability:** Comprehensive health checks, metrics, and distributed tracing provide deep visibility into system health and performance.
+- **Resilience & Fault Tolerance:** Circuit breakers, fallback mechanisms, and robust error handling ensure the system remains available even during partial failures.
+- **Testing & CI/CD:** Automated testing and deployment pipelines ensure code quality, reliability, and rapid delivery.
+- **Security Best Practices:** Secure configuration, encrypted secrets, and network policies protect data and services in all environments.
 
-The architecture is designed to be scalable, maintainable, and production-ready, following industry best practices and patterns for microservices development. 
+This architecture is designed to be scalable, maintainable, and extensible, following industry best practices and patterns for microservices development. It provides a strong foundation for building real-world, cloud-native applications.
+
+---
+
+### Overall Architecture Overview
+
+```mermaid
+graph TD
+  subgraph Infrastructure
+    Eureka[Eureka Service Discovery]
+    Kafka[Kafka Broker]
+    Gateway[API Gateway]
+  end
+  subgraph Services
+    User[User Service]
+    Product[Product Service]
+    Order[Order Service]
+  end
+  Client[Client (Web/App)]
+  Client --> Gateway
+  Gateway -->|REST/GraphQL| User
+  Gateway -->|REST/GraphQL| Product
+  Gateway -->|REST/GraphQL| Order
+  Gateway --> Eureka
+  User -- Registers/Discovers --> Eureka
+  Product -- Registers/Discovers --> Eureka
+  Order -- Registers/Discovers --> Eureka
+  User -- Publishes Events --> Kafka
+  Product -- Publishes Events --> Kafka
+  Order -- Publishes Events --> Kafka
+  User -- Consumes Events --> Kafka
+  Product -- Consumes Events --> Kafka
+  Order -- Consumes Events --> Kafka
+```
+
+---
+
+### Communication Flows
+
+```mermaid
+sequenceDiagram
+  participant Client
+  participant Gateway as API Gateway
+  participant User as User Service
+  participant Product as Product Service
+  participant Order as Order Service
+  participant Kafka as Kafka Broker
+  participant Eureka as Eureka
+
+  Client->>Gateway: HTTP Request (REST/GraphQL)
+  Gateway->>Eureka: Service Lookup
+  Gateway->>User: Forward Request (with JWT)
+  Gateway->>Product: Forward Request (with JWT)
+  Gateway->>Order: Forward Request (with JWT)
+  User->>Kafka: Publish Event (user.created)
+  Product->>Kafka: Publish Event (product.created)
+  Order->>Kafka: Publish Event (order.created)
+  Kafka-->>Order: Consume Event (user/product)
+  Kafka-->>User: Consume Event (order)
+  Kafka-->>Product: Consume Event (order)
+```
+
+---
