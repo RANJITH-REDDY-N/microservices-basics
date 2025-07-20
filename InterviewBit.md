@@ -1456,9 +1456,9 @@ Instead of services calling each other directly, they publish events (messages) 
 ### Real-World Scenarios
 
 **E-commerce Order Processing:**
-1. User places order → Order service publishes `order.created`
+1. User places order → Order service publishes `order.created` event
 2. Inventory service consumes event → reserves inventory
-3t service consumes event → processes payment
+3. Payment service consumes event → processes payment
 4. Notification service consumes event → sends confirmation email
 
 **User Registration Flow:**
