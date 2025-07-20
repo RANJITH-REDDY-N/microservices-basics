@@ -1461,9 +1461,11 @@ Instead of services calling each other directly, they publish events (messages) 
 3t service consumes event → processes payment
 4. Notification service consumes event → sends confirmation email
 
-**User Registration Flow:**1. User registers → User service publishes `user.created`
+**User Registration Flow:**
+1. User registers → User service publishes `user.created` event
 2. Email service consumes event → sends welcome email
-3. Analytics service consumes event → creates user profile4mmendation service consumes event → initializes preferences
+3. Analytics service consumes event → creates user profile
+4. Recommendation service consumes event → initializes preferences
 
 ---
 
