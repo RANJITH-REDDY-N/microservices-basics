@@ -1420,9 +1420,11 @@ Instead of services calling each other directly, they publish events (messages) 
 - **Consumers**: Services that read messages from topics
 - **Brokers**: Kafka servers that store the messages
 
-**Message Flow:**1ucer sends message to a topic
-2. Kafka stores the message on disk3mer reads messages from the topic
-4. Consumer processes the message and commits its position
+**Message Flow:**
+1. Producer(s) sends message to a topic
+2. Kafka Brokers stores the message on disk
+3. Consumer(s) reads messages from the topic
+4. Consumer(s) processes the message and commits its position
 
 ### Kafka Configuration Concepts
 
