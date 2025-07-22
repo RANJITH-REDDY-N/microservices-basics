@@ -2820,3 +2820,335 @@ graph TB
         Q[Transformation: XSLT]
     end
 ```
+
+## JSON (JavaScript Object Notation)
+
+### Q1: What is JSON and how does it work?
+
+**Technical Explanation:**
+JSON (JavaScript Object Notation) is a lightweight, text-based data interchange format that is language-independent but uses conventions familiar to programmers of C-family languages. JSON is built on two structures: a collection of name/value pairs (similar to an object, hash table, or dictionary) and an ordered list of values (similar to an array or list). JSON syntax is derived from JavaScript object notation but is supported by virtually all modern programming languages for parsing and generating JSON data.
+
+**Simple Explanation (Kid-friendly):**
+Imagine JSON like a recipe card. Just like how a recipe card has ingredients (keys) and their amounts (values), JSON stores information in pairs. For example, if you want to tell someone about your pet, you'd write: name is "Fluffy", age is 3, color is "brown". JSON does exactly this but in a format that computers can easily read and share with each other.
+
+**Real-world Scenario:**
+When you use a mobile app to check the weather, your phone sends a request to a weather service. The service responds with JSON data containing temperature, humidity, wind speed, etc. Your app then reads this JSON and displays the weather information in a user-friendly format.
+
+### Q2: What are the advantages of JSON over XML?
+
+**Technical Explanation:**
+JSON offers several advantages over XML: lighter syntax with less verbose markup, native JavaScript support enabling direct parsing without additional libraries, faster parsing due to simpler structure, better readability for humans, smaller file sizes leading to reduced bandwidth usage, and better performance in web applications. JSON's structure maps directly to data structures in most programming languages, making serialization and deserialization more efficient.
+
+**Simple Explanation:**
+Think of JSON and XML like two ways to write a shopping list. XML is like writing "Item: milk, Quantity: 1 gallon, Item: bread, Quantity: 2 loaves" with lots of extra words. JSON is like writing "milk: 1 gallon, bread: 2 loaves" - much shorter and easier to read while containing the same information.
+
+**Real-world Scenario:**
+E-commerce websites use JSON to exchange product information between the frontend and backend. When you search for products, the server sends product details (name, price, description, images) in JSON format, which loads faster than XML and provides a smoother user experience.
+
+## GIT
+
+### Q1: What is Git and why is version control important?
+
+**Technical Explanation:**
+Git is a distributed version control system that tracks changes in source code during software development. It maintains a complete history of all changes, allows multiple developers to work on the same project simultaneously, supports branching and merging strategies, and provides data integrity through SHA-1 hashing. Git's distributed nature means every developer has a complete copy of the project history, enabling offline work and reducing single points of failure.
+
+**Simple Explanation:**
+Git is like a time machine for your homework. Imagine you're writing a story, and every time you make changes, Git takes a snapshot. If you mess up, you can go back to any previous version. When you and your friends work on a group project, Git helps everyone contribute without overwriting each other's work.
+
+**Real-world Scenario:**
+A software development team of 20 developers working on a banking application uses Git to manage code changes. Each developer works on different features (login, payments, account management) in separate branches. Git tracks all changes, allows merging of completed features, and maintains a history of who changed what and when.
+
+### Q2: Explain Git branching strategies and merge conflicts.
+
+**Technical Explanation:**
+Git branching allows parallel development by creating independent lines of development. Common strategies include GitFlow (feature, develop, release, hotfix branches), GitHub Flow (feature branches with pull requests), and trunk-based development. Merge conflicts occur when Git cannot automatically resolve differences between branches, typically when the same lines of code are modified differently. Resolution requires manual intervention to decide which changes to keep, followed by committing the resolved version.
+
+**Simple Explanation:**
+Think of Git branches like different drafts of your story. You have the main story (master branch) and create copies to try different endings (feature branches). Sometimes when you try to combine two drafts, you find conflicting sentences in the same paragraph - that's a merge conflict. You need to decide which sentence to keep or combine them meaningfully.
+
+**Real-world Scenario:**
+Two developers modify the same user authentication function - one adds email validation, another adds password strength checking. When merging, Git detects a conflict in the same function. The team lead reviews both changes and manually combines them to include both email validation and password strength checking.
+
+## NEXUS
+
+### Q1: What is Nexus Repository Manager and its role in DevOps?
+
+**Technical Explanation:**
+Nexus Repository Manager is a repository manager that stores and distributes software components and build artifacts. It supports multiple repository formats (Maven, npm, Docker, NuGet, PyPI) and acts as a central hub for managing dependencies and artifacts throughout the software development lifecycle. Nexus provides features like component security scanning, cleanup policies, staging repositories, and integration with CI/CD pipelines for automated artifact deployment.
+
+**Simple Explanation:**
+Think of Nexus like a huge library where developers store all the building blocks (libraries, tools) they need to create software. Instead of everyone downloading the same tools from the internet repeatedly, they get them from this library. It's faster, safer, and the librarian (Nexus) makes sure all the books (dependencies) are authentic and virus-free.
+
+**Real-world Scenario:**
+A company building a web application needs various libraries (authentication, database connections, UI components). Instead of each developer downloading these from different internet sources, Nexus stores approved versions centrally. When developers build the application, they get all dependencies from Nexus, ensuring consistency and security across all environments.
+
+### Q2: How does Nexus support different repository formats?
+
+**Technical Explanation:**
+Nexus supports hosted repositories (store your own artifacts), proxy repositories (cache artifacts from remote repositories), and group repositories (combine multiple repositories into a single URL). For Maven, it stores JARs, POMs, and metadata. For Docker, it stores container images and layers. For npm, it handles JavaScript packages. Each format has specific handling for metadata, versioning, and dependency resolution while maintaining security scanning and access control.
+
+**Simple Explanation:**
+Nexus is like a universal storage room that can organize different types of items properly. Java libraries go in one section with their instruction manuals, Docker containers go in another section like different-sized boxes, and JavaScript packages go in yet another section. Each section has its own organization system, but you can access everything from one entrance.
+
+**Real-world Scenario:**
+A microservices application uses Java Spring Boot services (Maven artifacts), containerized in Docker images, with a React frontend (npm packages). Nexus stores all these different types of artifacts, allowing the CI/CD pipeline to retrieve Java libraries, Docker base images, and JavaScript dependencies from a single source during the build process.
+
+## JENKINS
+
+### Q1: What is Jenkins and how does it enable Continuous Integration?
+
+**Technical Explanation:**
+Jenkins is an open-source automation server that facilitates Continuous Integration and Continuous Deployment (CI/CD). It monitors version control systems for changes, automatically triggers builds, runs tests, and deploys applications. Jenkins uses plugins to integrate with various tools (Git, Maven, Docker, cloud platforms) and supports distributed builds through master-slave architecture. It provides a web interface for configuration, monitoring, and managing build pipelines.
+
+**Simple Explanation:**
+Jenkins is like a robot assistant that watches your homework folder. Whenever you save new work, it automatically checks if everything is correct (like spelling and grammar), packages it nicely, and delivers it to your teacher. If something's wrong, it tells you immediately so you can fix it before your teacher sees it.
+
+**Real-world Scenario:**
+A development team commits code changes to Git multiple times daily. Jenkins detects each commit, automatically builds the application, runs unit tests, integration tests, performs security scans, and if everything passes, deploys the application to staging environment. This ensures bugs are caught early and releases are reliable.
+
+### Q2: Explain Jenkins Master-Slave (Agent) Architecture.
+
+**Technical Explanation:**
+Jenkins Master-Agent architecture distributes build workload across multiple machines. The Master node schedules builds, serves the UI, stores configuration, and coordinates agents. Agent nodes execute build jobs assigned by the master. Communication happens through protocols like SSH, JNLP, or HTTP. This architecture enables parallel execution, platform-specific builds (Windows, Linux), resource isolation, and scalability. Labels and node restrictions control which jobs run on which agents.
+
+**Simple Explanation:**
+Think of Jenkins Master as a school principal and Agents as different classroom teachers. The principal (Master) assigns different subjects (build jobs) to appropriate teachers (Agents). Math teacher handles math homework (Java builds), Art teacher handles art projects (UI builds), and Gym teacher handles physical activities (deployment tasks). This way, many tasks happen simultaneously instead of waiting in line.
+
+**Real-world Scenario:**
+A company has applications for iOS, Android, and Web. Jenkins Master assigns iOS builds to Mac agents, Android builds to Linux agents with Android SDK, and web builds to Windows agents with specific browsers for testing. This enables parallel builds and platform-specific environments while centralizing management.
+
+### Q3: What are Jenkins Pipelines and how do they work?
+
+**Technical Explanation:**
+Jenkins Pipelines define build processes as code using Groovy-based DSL. Declarative pipelines use structured syntax with predefined sections (agent, stages, steps), while Scripted pipelines offer more flexibility. Pipelines support parallel execution, conditional logic, error handling, and integration with external tools. Pipeline as Code stores build definitions in version control alongside application code, enabling versioning, code review, and consistency across environments.
+
+**Simple Explanation:**
+Jenkins Pipeline is like a recipe for cooking. It lists all the steps in order: get ingredients (checkout code), mix them (build), taste test (run tests), and serve (deploy). Just like you can write down a recipe and share it with friends, Pipeline lets you write down build steps and share them with your team. Everyone follows the same recipe to get consistent results.
+
+**Real-world Scenario:**
+An e-commerce application pipeline includes: checkout code, build backend services, build frontend, run unit tests, run integration tests, perform security scanning, deploy to staging, run automated UI tests, and if all pass, deploy to production. This entire workflow is defined as code and can be modified, reviewed, and versioned like any other code.
+
+### Q4: How do you create and configure Jenkins Jobs?
+
+**Technical Explanation:**
+Jenkins jobs are created through the web interface or programmatically via API/CLI. Freestyle projects offer GUI-based configuration with build triggers (SCM polling, webhooks, scheduled), build environment setup, build steps (shell commands, batch files, invoke tools), and post-build actions (archive artifacts, send notifications). Jobs can be parameterized for runtime customization, chained together, and configured with security restrictions and node assignments.
+
+**Simple Explanation:**
+Creating a Jenkins job is like setting up a routine for your robot pet. You tell it: "When someone rings the doorbell (trigger), go to the front door (workspace), check who's there (build step), and if it's family, let them in (post-build action)." You set up these instructions once, and the robot follows them automatically every time.
+
+**Real-world Scenario:**
+Creating a job for a Spring Boot application: configure Git repository URL, set webhook trigger for automatic builds on commits, add build steps to run Maven clean install, configure JUnit test result publishing, set up email notifications on failure, and archive the generated JAR file as a build artifact.
+
+### Q5: What are Jenkins Plugins and how do they extend functionality?
+
+**Technical Explanation:**
+Jenkins plugins are add-on modules that extend Jenkins functionality. The Plugin Manager handles installation, updates, and dependencies. Popular plugins include Git (SCM integration), Maven (build tool), Docker (containerization), AWS (cloud deployment), and Blue Ocean (modern UI). Plugins follow Jenkins extension points and APIs, enabling integration with external tools, custom build steps, notification systems, and UI enhancements while maintaining backwards compatibility.
+
+**Simple Explanation:**
+Jenkins plugins are like apps on your smartphone. Your phone comes with basic features (calling, texting), but you can download apps to add new capabilities (games, camera filters, maps). Similarly, Jenkins comes with basic build features, but plugins add superpowers like connecting to different tools, sending fancy notifications, or creating beautiful dashboards.
+
+**Real-world Scenario:**
+A project needs integration with Slack for notifications, SonarQube for code quality, Docker for containerization, and AWS for deployment. Installing respective plugins enables Jenkins to send build status to Slack channels, trigger SonarQube analysis, build Docker images, and deploy containers to AWS ECS, all configured through Jenkins interface.
+
+### Q6: Explain Jenkins Security and User Management.
+
+**Technical Explanation:**
+Jenkins security includes authentication (verifying user identity) and authorization (controlling access permissions). Authentication methods include Jenkins database, LDAP, Active Directory, OAuth, and SAML. Authorization strategies include matrix-based security (fine-grained permissions), project-based matrix authorization, and role-based access control. Security also covers CSRF protection, agent-to-master access control, script approval for pipeline security, and credential management for storing sensitive information.
+
+**Simple Explanation:**
+Jenkins security is like a school system with different levels of access. Students (regular users) can see their own grades, teachers (developers) can create and run specific classes (projects), and principals (administrators) can access everything. Just like schools use ID cards and passwords to verify who you are and what you're allowed to do, Jenkins does the same for build systems.
+
+**Real-world Scenario:**
+In a company, developers can create and run jobs for their projects, QA team can trigger test jobs but not modify them, managers can view all job results but not access configuration, and only DevOps administrators can install plugins, manage agents, and modify global configurations. Credentials for databases, cloud services, and external tools are stored securely and referenced by jobs without exposing passwords.
+
+### Q7: What is Blue Ocean and how does it improve Jenkins experience?
+
+**Technical Explanation:**
+Blue Ocean is a modern, intuitive UI for Jenkins that provides visual pipeline editor, enhanced pipeline visualization, and improved user experience. It offers real-time pipeline execution views with visual indication of stage progress, personalized dashboards showing relevant pipelines, integrated pipeline editor with visual drag-and-drop interface, and mobile-responsive design. Blue Ocean maintains compatibility with existing Jenkins installations while providing a contemporary interface for pipeline management.
+
+**Simple Explanation:**
+Blue Ocean is like upgrading from an old TV with knobs and buttons to a modern smart TV with a touchscreen remote. The old TV (classic Jenkins) works fine but is harder to use. The smart TV (Blue Ocean) does the same thing but with a beautiful, easy-to-use interface that makes everything clearer and more enjoyable to operate.
+
+**Real-world Scenario:**
+A development team struggling with Jenkins' traditional interface adopts Blue Ocean. Non-technical stakeholders can now easily understand pipeline progress through visual representations, developers can quickly identify which stage failed and why, and new team members can create pipelines using the visual editor without learning complex Jenkinsfile syntax.
+
+### Q8: How do you implement Jenkins Pipeline as Code?
+
+**Technical Explanation:**
+Pipeline as Code stores build definitions in Jenkinsfile within the project repository. This approach enables version control of build processes, code review of pipeline changes, and consistency across environments. Jenkinsfiles use Declarative or Scripted syntax, support shared libraries for code reuse, can be parameterized for flexibility, and integrate with branch-based development workflows. Pipeline code follows software engineering best practices like modularity, testing, and documentation.
+
+**Simple Explanation:**
+Pipeline as Code is like keeping your cooking recipe in the same place as your ingredients. Instead of having build instructions written on sticky notes that can get lost, you keep them in the same folder as your code. When you share your project with others, they get both the ingredients (source code) and the recipe (build instructions) together.
+
+**Real-world Scenario:**
+A microservices architecture with 15 services stores each service's Jenkinsfile in its repository. When developers create feature branches, Jenkins automatically creates pipeline instances for those branches using the same build process. Pipeline changes go through code review, ensuring build process quality and enabling pipeline evolution alongside application development.
+
+### Q9: What are Jenkins Shared Libraries and their benefits?
+
+**Technical Explanation:**
+Jenkins Shared Libraries enable code reuse across multiple pipeline scripts by storing common functionality in a Git repository. Libraries contain global variables, custom pipeline steps, and utility classes that can be imported into Jenkinsfiles. They support versioning, allowing different projects to use different library versions, and can be configured globally or at folder level. Shared Libraries promote standardization, reduce code duplication, and enable centralized maintenance of common build patterns.
+
+**Simple Explanation:**
+Jenkins Shared Libraries are like a family recipe book that everyone can use. Instead of each family member writing down the same cookie recipe separately, they keep one master recipe book. When someone improves the recipe, everyone benefits. Similarly, instead of every project writing the same build steps, they use the shared library, and when someone improves a build step, all projects get the improvement.
+
+**Real-world Scenario:**
+A company with 50 microservices creates shared libraries containing common steps like security scanning, Docker image building, and deployment patterns. Each service's Jenkinsfile becomes much shorter by calling library functions. When the company updates their security scanning tool, they only need to update the shared library, and all 50 services automatically use the new scanning method.
+
+### Q10: How do you monitor and troubleshoot Jenkins?
+
+**Technical Explanation:**
+Jenkins monitoring involves system metrics (CPU, memory, disk usage), build metrics (success/failure rates, build duration trends), and log analysis. Tools include Jenkins' built-in monitoring, external solutions like Prometheus with Grafana, and log aggregation systems like ELK stack. Troubleshooting techniques include examining console output, system logs, plugin compatibility issues, and performance bottlenecks. Health checks monitor agent connectivity, disk space, and plugin status.
+
+**Simple Explanation:**
+Monitoring Jenkins is like being a doctor for your robot assistant. You regularly check if it's healthy (running well), measure its temperature (CPU usage), check its heartbeat (build success rates), and look at its diary (logs) when it's not feeling well. When problems occur, you use these health indicators to diagnose and fix issues.
+
+**Real-world Scenario:**
+A DevOps team monitors Jenkins through dashboards showing build success rates, average build times, and resource utilization. When builds start failing frequently, they investigate logs, check agent connectivity, verify plugin compatibility, and analyze resource constraints. Automated alerts notify them of critical issues like disk space running low or agent disconnections.
+
+## MAVEN
+
+### Q1: What is Maven and how does it manage Java projects?
+
+**Technical Explanation:**
+Maven is a build automation and project management tool primarily used for Java projects. It uses Project Object Model (POM) files to define project structure, dependencies, build lifecycle, and plugins. Maven follows Convention over Configuration, establishing standard directory layouts and build processes. It automatically downloads and manages dependencies from central repositories, handles transitive dependencies, and provides lifecycle phases (validate, compile, test, package, verify, install, deploy) for consistent project builds.
+
+**Simple Explanation:**
+Maven is like a smart assistant for building LEGO projects. Instead of you figuring out which pieces you need and in what order to assemble them, Maven reads the instruction manual (POM file) and automatically gets all the right pieces from the LEGO store (repository), follows the building steps in the correct order, and creates your final model. It even gets pieces that your main pieces depend on!
+
+**Real-world Scenario:**
+A Spring Boot web application uses Maven to manage 30+ dependencies (Spring framework, database drivers, testing libraries). Maven automatically downloads compatible versions, ensures all transitive dependencies are available, compiles source code, runs tests, and packages everything into an executable JAR file. Developers only need to specify direct dependencies in the POM file.
+
+### Q2: Explain Maven Repository System and Dependency Management.
+
+**Technical Explanation:**
+Maven repositories store project artifacts and metadata. Local repository (on developer machine) caches downloaded dependencies, central repository (default remote repository) hosts open-source artifacts, and remote repositories can be configured for private artifacts. Dependency management includes version resolution, transitive dependency handling, dependency scopes (compile, test, runtime, provided), and conflict resolution through nearest definition strategy. Maven uses coordinates (groupId, artifactId, version) for unique artifact identification.
+
+**Simple Explanation:**
+Maven repositories are like a chain of libraries. You have a small personal library at home (local repository), your neighborhood has a big public library (central repository), and some specialized libraries exist for specific topics (remote repositories). When you need a book, Maven first checks your home library, then the public library, and finally specialized libraries. It also automatically gets any reference books that your main book mentions.
+
+**Real-world Scenario:**
+A project depends on Spring Boot, which internally depends on Spring Core, Spring Context, and logging frameworks. Maven automatically downloads all these transitive dependencies, resolving version conflicts by choosing the nearest version in the dependency tree. The local repository caches everything, so subsequent builds are faster, and team members get the same dependency versions.
+
+### Q3: What are Maven Build Lifecycles and Phases?
+
+**Technical Explanation:**
+Maven defines three built-in lifecycles: clean (cleans up artifacts), default (builds the project), and site (generates project documentation). The default lifecycle contains phases: validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, and deploy. Each phase can have goals bound to it through plugins.
+
+**Simple Explanation:**
+Maven lifecycle is like a step-by-step recipe for baking a cake. You can't skip from mixing ingredients directly to decorating - you must follow the order: prepare ingredients (validate), mix batter (compile), bake in oven (test), let cool (package), add frosting (install), and serve to guests (deploy). You can start from any step and Maven will do all previous steps automatically.
+
+**Real-world Scenario:**
+Running `mvn deploy` on a Spring Boot project executes all previous phases: validates project structure, compiles source code, runs unit tests, packages into JAR, runs integration tests, installs in local repository, and finally deploys to remote repository. Each phase can be extended with plugins for additional functionality like code coverage or security scanning.
+
+## JMS (Java Message Service)
+
+### Q1: What is JMS and how does it enable asynchronous communication?
+
+**Technical Explanation:**
+JMS (Java Message Service) is a Java API for creating, sending, receiving, and reading messages between distributed components. It provides asynchronous communication through message-oriented middleware (MOM), supporting two messaging models: point-to-point (queues) and publish-subscribe (topics). JMS ensures loose coupling between components, enables scalable architectures, and provides features like message persistence, transactions, and acknowledgment modes for reliable message delivery.
+
+**Simple Explanation:**
+JMS is like a postal system for computer programs. Instead of programs talking directly to each other (like phone calls), they send letters (messages) through a post office (message broker). The sender drops off a letter and continues working without waiting for a reply. The receiver gets the letter when they're ready to read it. This way, both programs can work independently without getting stuck waiting for each other.
+
+**Real-world Scenario:**
+An e-commerce system uses JMS for order processing. When a customer places an order, the web application sends a message to the order processing queue. The inventory service receives the message, checks stock availability, and sends a message to the payment queue. The payment service processes payment and sends confirmation messages. Each service works independently, making the system resilient and scalable.
+
+### Q2: Explain JMS Message Models: Point-to-Point vs Publish-Subscribe.
+
+**Technical Explanation:**
+Point-to-Point model uses queues where each message has exactly one sender and one receiver. Messages are stored until consumed or expired, and multiple consumers can read from the same queue, but each message is delivered to only one consumer. Publish-Subscribe model uses topics where publishers send messages without knowing subscribers, and all active subscribers receive copies of each message. Durable subscriptions allow subscribers to receive messages even when offline.
+
+**Simple Explanation:**
+Point-to-Point is like sending a package to one specific person - only they can open it. Even if multiple people are waiting for packages, each package goes to exactly one person. Publish-Subscribe is like a newspaper - when the publisher prints an issue, all subscribers get their own copy. Everyone who subscribed gets the same news, but each person has their own newspaper to read.
+
+**Real-world Scenario:**
+A banking system uses Point-to-Point for transaction processing (each transaction processed by exactly one service) and Publish-Subscribe for fraud alerts (when fraud is detected, notifications are sent to multiple systems: security team, customer notification service, and audit logging system). Each model serves different communication patterns based on business requirements.
+
+## DOCKER
+
+### Q1: What is Docker and how does containerization work?
+
+**Technical Explanation:**
+Docker is a containerization platform that packages applications and their dependencies into lightweight, portable containers. Containers share the host OS kernel but run in isolated user spaces, providing process and file system isolation. Docker uses Linux namespaces for isolation, cgroups for resource management, and Union File Systems for layered images. Containers are created from immutable images built using Dockerfiles, which define the application environment, dependencies, and configuration.
+
+**Simple Explanation:**
+Docker is like a magical lunch box that keeps your food exactly the same no matter where you take it. Just like how your sandwich tastes the same whether you eat it at home, school, or park, Docker keeps your application working the same whether it runs on your laptop, a server, or in the cloud. The lunch box (container) contains everything your food (application) needs to stay fresh and tasty.
+
+**Real-world Scenario:**
+A web application works perfectly on a developer's laptop but fails on the production server due to different operating system versions and missing libraries. With Docker, the developer packages the application, runtime environment, libraries, and configurations into a container image. This image runs identically on any system with Docker, eliminating "it works on my machine" problems.
+
+### Q2: Explain Docker Images, Layers, and the Union File System.
+
+**Technical Explanation:**
+Docker images are read-only templates composed of multiple layers stacked using Union File System. Each layer represents a change in the file system, created by Dockerfile instructions (FROM, RUN, COPY, etc.). Layers are cached and shared between images, optimizing storage and transfer efficiency. When a container runs, Docker adds a writable layer on top. Image layers use content-addressable storage with SHA-256 hashes for integrity and deduplication.
+
+**Simple Explanation:**
+Docker images are like transparent sheets that stack on top of each other to create a complete picture. The bottom sheet might have the basic operating system (like a landscape background), the next sheet adds programming languages (like trees), and the top sheet adds your application (like a house). When you want to make changes, you add a new transparent sheet on top instead of redrawing everything. This way, you can share the landscape and trees with others building different houses.
+
+**Real-world Scenario:**
+A company builds multiple Java applications sharing the same base layers: Ubuntu OS (layer 1), Java JDK (layer 2), and Maven (layer 3). Each application adds its specific layers (layer 4: application JAR, layer 5: configuration). When pushing to registry, only new layers are uploaded. If 10 applications share the first 3 layers, the registry stores these common layers once, saving storage space and transfer time.
+
+### Q3: What are Dockerfiles and best practices for writing them?
+
+**Technical Explanation:**
+Dockerfiles are text files containing instructions to build Docker images. Common instructions include FROM (base image), WORKDIR (working directory), COPY/ADD (files), RUN (execute commands), EXPOSE (ports), ENV (environment variables), and CMD/ENTRYPOINT (container startup). Best practices include using specific base image tags, minimizing layers, leveraging build cache, using multi-stage builds, running as non-root user, and keeping images small through .dockerignore files.
+
+**Simple Explanation:**
+A Dockerfile is like a recipe card that tells Docker how to prepare your application container. Just like a recipe lists ingredients and cooking steps in order, a Dockerfile lists what base ingredients (operating system) to start with, what tools to install, where to put your application files, and how to start your application. Following good recipe practices (clear instructions, minimal ingredients, proper order) makes better containers.
+
+**Real-world Scenario:**
+A Node.js application Dockerfile starts with Node.js base image, sets working directory, copies package.json first (for dependency caching), runs npm install, copies application code, exposes port 3000, creates non-root user for security, and sets startup command. This approach optimizes build time through layer caching and follows security best practices.
+
+### Q4: How do Docker Networks enable container communication?
+
+**Technical Explanation:**
+Docker networking enables communication between containers, hosts, and external networks. Default networks include bridge (default for containers on same host), host (container uses host network), and none (no networking). Custom networks support different drivers: bridge (isolated network on single host), overlay (multi-host networking for swarms), macvlan (assigns MAC addresses to containers), and host (direct access to host network). Network policies control traffic flow and security.
+
+**Simple Explanation:**
+Docker networks are like different types of playgrounds where containers can play together. A bridge network is like a school playground where kids from the same school can play together but are separated from other schools. A host network is like playing in your own backyard with no fence - you can reach anything around you. An overlay network is like having playgrounds in different cities connected by tunnels so kids can play together even from far away.
+
+**Real-world Scenario:**
+A microservices application uses custom bridge networks to isolate different service tiers: web services communicate on a "frontend" network, backend services on a "backend" network, and databases on a "data" network. Only web services connect to frontend and backend networks, providing security isolation while enabling necessary communication patterns.
+
+## KUBERNETES
+
+### Q1: What is Kubernetes and how does it orchestrate containers?
+
+**Technical Explanation:**
+Kubernetes is a container orchestration platform that automates deployment, scaling, and management of containerized applications. It provides declarative configuration through YAML manifests, maintains desired state through controllers, and offers service discovery, load balancing, storage orchestration, and automated rollouts/rollbacks. Kubernetes abstracts infrastructure complexity, enabling applications to run across multiple hosts while handling failures, scaling, and resource allocation automatically.
+
+**Simple Explanation:**
+Kubernetes is like a smart building manager for a huge apartment complex (your cluster). It knows how many apartments (containers) you need, makes sure they're all running properly, fixes broken ones, and can quickly add more apartments when more people (users) show up. It also manages the building's utilities (networking, storage) and makes sure everyone can find each other's apartments easily.
+
+**Real-world Scenario:**
+A social media application runs hundreds of containers across dozens of servers. Kubernetes automatically distributes containers based on resource requirements, restarts failed containers, scales up during peak usage times, updates application versions without downtime, and ensures database containers have persistent storage even if they move between servers.
+
+### Q2: Explain Kubernetes Architecture: Master and Worker Nodes.
+
+**Technical Explanation:**
+Kubernetes cluster consists of master nodes (control plane) and worker nodes. Master components include API Server (receives and processes API requests), etcd (distributed key-value store for cluster state), Controller Manager (maintains desired state), and Scheduler (assigns pods to nodes). Worker nodes run kubelet (node agent communicating with master), kube-proxy (network proxy for services), and container runtime (Docker/containerd). This architecture provides high availability, scalability, and fault tolerance.
+
+**Simple Explanation:**
+Think of Kubernetes like a restaurant chain. The master node is like the headquarters with managers (API server, scheduler, controller) who make decisions about which restaurant (worker node) should serve which customers (pods). Worker nodes are individual restaurants with staff (kubelet, kube-proxy) who actually serve customers and report back to headquarters. If one restaurant closes, headquarters automatically sends customers to other locations.
+
+**Real-world Scenario:**
+A 3-master, 10-worker Kubernetes cluster runs an e-commerce platform. Masters coordinate decisions and maintain cluster state, while workers host actual application pods. When traffic increases during sales events, masters schedule additional pods across available workers. If a worker fails, masters detect the failure and recreate affected pods on healthy workers, ensuring continuous service availability.
+
+### Q3: What are Kubernetes Pods, Services, and Deployments?
+
+**Technical Explanation:**
+Pods are the smallest deployable units containing one or more containers sharing network and storage. Services provide stable network endpoints for accessing pods, supporting ClusterIP (internal), NodePort (external access via node IP), LoadBalancer (cloud load balancer), and ExternalName types. Deployments manage replica sets to ensure desired number of pod replicas, handle rolling updates, and provide rollback capabilities. These primitives work together to create scalable, resilient applications.
+
+**Simple Explanation:**
+Pods are like apartments where your application lives - they can be single rooms (one container) or multi-room suites (multiple containers). Services are like the building's reception desk that knows where everyone lives and directs visitors to the right apartment, even when people move to different apartments. Deployments are like the building management company that ensures you always have enough apartments available and can upgrade them without kicking anyone out.
+
+**Real-world Scenario:**
+An online store has deployment specifications for web servers (3 replicas), API servers (5 replicas), and databases (1 replica with persistent storage). Services expose these deployments: LoadBalancer service for web servers (public access), ClusterIP for API servers (internal access), and headless service for databases (direct pod access). When updating the API, deployment performs rolling updates, ensuring availability throughout the process.
+
+### Q4: How does Kubernetes handle ConfigMaps and Secrets?
+
+**Technical Explanation:**
+ConfigMaps store non-sensitive configuration data as key-value pairs, environment variables, or configuration files that can be mounted into pods. Secrets store sensitive information (passwords, tokens, keys) with base64 encoding and additional security features. Both can be consumed by pods through environment variables, volume mounts, or command-line arguments. Updates to ConfigMaps/Secrets can trigger pod restarts for dynamic configuration changes.
+
+**Simple Explanation:**
+ConfigMaps are like instruction cards that tell your application how to behave - what color theme to use, which database to connect to, or how many items to show per page. Secrets are like locked safes containing passwords and keys that your application needs but shouldn't be visible to everyone. Both can be changed without rebuilding your application, like updating settings on your phone without reinstalling apps.
