@@ -113,25 +113,34 @@ Think of OOP like building with smart LEGO blocks. Encapsulation is like each LE
 A banking system uses all four OOP pillars: Account class encapsulates balance and account number with private access. SavingsAccount and CheckingAccount inherit from Account. Both implement calculateInterest() differently (polymorphism) - savings uses compound interest while checking uses simple interest. The abstract Transaction class defines common behavior for deposits and withdrawals without specifying implementation details, allowing different transaction types to implement their own validation rules.
 
 ```mermaid
-graph TB
-    subgraph "Abstraction"
-        A[Abstract Vehicle<br/>- speed<br/>+ move()]
-    end
-    
-    subgraph "Inheritance"
-        B[Car]
-        C[Bike]
-        A --> B
-        A --> C
-    end
-    
-    subgraph "Encapsulation"
-        D[Private: engineType<br/>Protected: speed<br/>Public: getSpeed()]
-    end
-    
-    subgraph "Polymorphism"
-        E[Car.move() - drives]
-        F[Bike.move() - pedals]
+graph TD
+    subgraph "Object-Oriented Programming (OOP) Principles"
+        subgraph "Abstraction"
+            A[Abstract Vehicle]
+            A -- Defines common interface --> B[Speed property and move method]
+        end
+
+        subgraph "Inheritance"
+            A --> C[Car Class]
+            A --> D[Bike Class]
+            C --> C_Impl[Car move method - drives]
+            D --> D_Impl[Bike move method - pedals]
+        end
+
+        subgraph "Encapsulation"
+            E[Car Class Attributes and Methods]
+            E --> F[Private: engineType
+Protected: speed
+Public: getSpeed]
+        end
+
+        subgraph "Polymorphism"
+            G[Vehicle Reference]
+            G -- Can point to --> C
+            G -- Can point to --> D
+            C_Impl --> H[vehicle.move results in Car driving]
+            D_Impl --> I[vehicle.move results in Bike pedaling]
+        end
     end
 ```
 
@@ -182,16 +191,17 @@ A music player app uses ArrayList for the main playlist display because users fr
 graph LR
     subgraph "ArrayList"
         A1[0] --> A2[1] --> A3[2] --> A4[3] --> A5[4]
-        AN[Direct Access O(1)]
+        A5 --> AN["Direct Access<br/>O(1)"]
     end
-    
+
     subgraph "LinkedList"
-        L1[Node] -.-> L2[Node] -.-> L3[Node] -.-> L4[Node]
-        L2 -.-> L1
-        L3 -.-> L2
-        L4 -.-> L3
-        LN[Sequential Access O(n)]
+        L1[Node] --> L2[Node] --> L3[Node] --> L4[Node]
+        L4 --> LN["Sequential Access<br/>O(n)"]
+        L2 --> L1
+        L3 --> L2
+        L4 --> L3
     end
+
 ```
 
 ### 8. What are Java 8 Stream APIs and their benefits?
@@ -206,14 +216,14 @@ An HR system processes employee data to find all developers earning above $100k 
 
 ```mermaid
 graph LR
-    A[Collection] --> B[stream()]
-    B --> C[filter()]
-    C --> D[map()]
-    D --> E[sorted()]
-    E --> F[collect()]
+    A[Collection] --> B[stream]
+    B --> C[filter]
+    C --> D[map]
+    D --> E[sorted]
+    E --> F[collect]
     F --> G[Result]
-    
-    B -.-> H[parallelStream()]
+
+    A --> H[parallelStream]
     H -.-> C
 ```
 
@@ -227,27 +237,6 @@ Think of an abstract class like a partially built house blueprint that includes 
 **Scenario:**
 A game development framework uses abstract class `GameObject` with concrete methods for position management and abstract methods for render() and update(). All game objects (Player, Enemy, PowerUp) extend GameObject, inheriting common positioning logic. Interfaces like `Moveable`, `Shootable`, and `Collidable` define capabilities. A Player class extends GameObject and implements all three interfaces, while a Building extends GameObject but only implements Collidable, showcasing flexible capability composition.
 
-```mermaid
-graph TD
-    subgraph "Abstract Class"
-        A[Animal<br/>- name: String<br/>+ getName()<br/>+ abstract makeSound()]
-    end
-    
-    subgraph "Interface"
-        I1[Flyable<br/>+ fly()]
-        I2[Swimmable<br/>+ swim()]
-    end
-    
-    subgraph "Implementation"
-        D[Duck extends Animal<br/>implements Flyable, Swimmable]
-        C[Cat extends Animal]
-    end
-    
-    A --> D
-    A --> C
-    I1 --> D
-    I2 --> D
-```
 
 ### 10. Explain Method Overloading vs Method Overriding
 
@@ -258,23 +247,6 @@ Method overloading is like having different recipes for chocolate cake - one rec
 
 **Scenario:**
 A payment processing system uses overloading for processPayment() methods - one accepts credit card details, another accepts bank account info, and another accepts digital wallet tokens. Each handles different payment types. For overriding, the base PaymentProcessor class has a validateTransaction() method. The CreditCardProcessor overrides it to check card validity and credit limits, while CryptoProcessor overrides it to verify blockchain confirmations, providing specialized validation logic for each payment type.
-
-```mermaid
-graph TD
-    subgraph "Method Overloading - Same Class"
-        O1[print(String s)]
-        O2[print(int i)]
-        O3[print(String s, int times)]
-    end
-    
-    subgraph "Method Overriding - Inheritance"
-        P[Parent: draw()]
-        C1[Circle: @Override draw()]
-        C2[Square: @Override draw()]
-        P --> C1
-        P --> C2
-    end
-```
 
 ### 11. What is the Java Memory Model and how is memory organized?
 
@@ -297,8 +269,11 @@ graph TB
         end
         
         subgraph "Shared Memory"
-            H[Heap<br/>Young Gen | Old Gen]
-            M[Metaspace<br/>Class Metadata]
+            H[Heap
+Young Gen
+Old Gen]
+            M[Metaspace
+Class Metadata]
         end
         
         subgraph "Stack Frame"
@@ -307,6 +282,7 @@ graph TB
             FR[Frame Data]
         end
     end
+
 ```
 
 ### 12. What is Thread Safety and how do you achieve it?
@@ -350,22 +326,6 @@ Think of String like a printed book - once printed, you can't change the words. 
 **Scenario:**
 A log processing application reads millions of log entries. Using String concatenation in a loop would create millions of temporary objects, causing memory pressure and garbage collection overhead. StringBuilder efficiently builds each processed log entry. In the multi-threaded aggregation phase where multiple threads contribute to a summary report, StringBuffer ensures thread-safe concatenation. For configuration constants and error messages that don't change, String is used for memory efficiency through String Pool sharing.
 
-```mermaid
-graph LR
-    subgraph "String - Immutable"
-        S1[Hello] --> S2[Hello World<br/>New Object]
-    end
-    
-    subgraph "StringBuilder - Mutable"
-        SB1[Hello] --> SB2[Append: World<br/>Same Object Modified]
-    end
-    
-    subgraph "StringBuffer - Thread-Safe"
-        SF1[synchronized append()]
-        SF2[synchronized insert()]
-        SF3[synchronized delete()]
-    end
-```
 
 ### 14. What are Checked and Unchecked Exceptions?
 
@@ -413,7 +373,7 @@ graph TD
     subgraph "Singleton Implementation"
         A[Private Constructor]
         B[Private Static Instance]
-        C[Public getInstance()]
+        C[Public getInstance method]
         
         D[Thread 1] --> C
         E[Thread 2] --> C
