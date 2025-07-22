@@ -7159,3 +7159,398 @@ Nginx caching stores frequently requested content in memory or disk to reduce re
 
 **Kid-Friendly Explanation:**
 Nginx caching is like having a really smart librarian who remembers which books people ask for most often and keeps those books right at the front desk instead of making people wait while they go find them in the back of the library. When someone asks for a popular book (like a popular webpage), the librarian can hand it over immediately instead of walking all the way to the shelves. The librarian also remembers how long each book stays popular and puts newer, more popular books at the front desk while moving older, less popular ones back towards back of the library.
+
+
+
+Of course. Here are Q\&A entries for the selected technical topics from your resume, written in the same style as the provided file.
+
+-----
+
+## Frameworks & Query Languages
+
+### **1. What is HQL and how does it differ from SQL?**
+
+**Technical Explanation:**
+**HQL (Hibernate Query Language)** is an object-oriented query language, similar in syntax to SQL, that allows you to query against your persistent objects (Java classes) rather than directly against database tables and columns. Hibernate parses HQL queries and translates them into traditional SQL queries for the specific database dialect you are using. This makes your data access code database-independent. The key difference is that HQL understands object-oriented concepts like inheritance, polymorphism, and associations.
+
+> **Kid-Friendly Explanation:** 🧑‍🏫
+> Imagine SQL is a language that only talks about tables, rows, and columns. HQL is a higher-level language that talks about `User` objects, `Order` objects, and their properties like `userName`. You tell Hibernate in the HQL language, "Get me all the `User` objects from 'Michigan'", and Hibernate acts as a translator, figuring out the complex SQL needed to get that information from the actual database tables.
+
+**Visualization:**
+
+```mermaid
+graph LR
+    A[Java Code] --> B[FROM User u WHERE u.city = 'Ann Arbor'];
+    subgraph Hibernate Engine
+        B --> C[HQL Parser];
+        C --> D[SQL Translator];
+    end
+    D --> E[SELECT u.* FROM users u WHERE u.city_name = 'Ann Arbor'];
+    E --> F[(Database)];
+    F --> A;
+```
+
+**Real-World Scenario:**
+[cite\_start]In your role at Charles Schwab, instead of writing a native SQL query like `SELECT * FROM TBL_CUSTOMERS WHERE STATE_CD = 'MI'`, you would write an HQL query like `FROM Customer c WHERE c.stateCode = 'MI'`[cite: 41]. This is more readable and portable; if the database schema changes (e.g., column `STATE_CD` becomes `STATE_IDENTIFIER`), you only need to update the Hibernate mapping, not every query in your application.
+
+-----
+
+### **2. What is Angular and how does it create Single Page Applications (SPAs)?**
+
+**Technical Explanation:**
+**Angular** is a comprehensive, component-based framework developed by Google for building dynamic and complex web applications. It uses **TypeScript**, a superset of JavaScript, to provide static typing and robust tooling. Angular enables the creation of **Single Page Applications (SPAs)** by loading a single HTML page and dynamically updating its content as the user interacts with the app. It achieves this through a powerful router that manages navigation without full page reloads. Key features include two-way data binding, a hierarchical dependency injection system, and a rich ecosystem of tools and libraries.
+
+> **Kid-Friendly Explanation:** 🧩
+> Think of a traditional website as a book where you have to turn to a completely new page for every section. Angular is like a magical pop-up book. You open it once, and as you interact with it—pulling tabs and turning dials—new scenes and characters pop up on the *same page* without you ever having to flip to a new one. This makes the experience much faster and smoother.
+
+**Visualization:**
+
+```mermaid
+graph TD
+    A[User Action<br/>(e.g., clicks link)] --> B[Angular Router];
+    B --> C{Fetches Component<br/>(not new HTML page)};
+    C --> D[Dynamically Renders<br/>Component in View];
+    D --> E[UI Updates Instantly];
+
+    subgraph Angular App Core
+        F[Component A];
+        G[Component B];
+        H[Service];
+    end
+    F & G --> H;
+```
+
+**Real-World Scenario:**
+[cite\_start]In your experience, you used AngularJS to develop a SPA[cite: 47, 50]. A user logs into a dashboard. When they click on "View Profile" or "See Reports", Angular doesn't reload the entire website. Instead, the Angular Router intercepts the click, fetches the necessary data via a service, and dynamically replaces the main content area with the `ProfileComponent` or `ReportsComponent`, providing a fluid, app-like experience for the user.
+
+-----
+
+### **3. What is Spring Data JPA and how does it simplify database access?**
+
+**Technical Explanation:**
+**Spring Data JPA** is a module within the Spring Framework that aims to significantly simplify the implementation of the data access layer (DAL). It builds on top of the Java Persistence API (JPA), abstracting away the boilerplate code required for common operations. Its most powerful feature is the ability to create repository interfaces by simply extending `JpaRepository`. Spring Data then automatically provides implementations for standard CRUD (Create, Read, Update, Delete) operations. Furthermore, it can derive complex queries directly from the method names in your repository interface, eliminating the need to write HQL or native SQL for many use cases.
+
+> **Kid-Friendly Explanation:** 🪄
+> Imagine you need to get things from a giant warehouse (your database). Normally, you'd need a detailed map and a list of instructions (SQL/HQL) to find anything. Spring Data JPA is like having a magic assistant. You just create an empty list and name it "Find all blue toys" (`findByColor('blue')`). The assistant sees the name of your list and automatically understands how to go into the warehouse and get exactly what you asked for, with no instructions needed from you.
+
+**Visualization:**
+
+```java
+// You write ONLY this interface.
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    // Spring Data automatically creates the implementation for this!
+    List<Customer> findByLastName(String lastName);
+
+    // And this!
+    Optional<Customer> findByAccountNumber(String accountNumber);
+}
+
+// Spring provides the implementation at runtime, equivalent to:
+// entityManager.createQuery("SELECT c FROM Customer c WHERE c.lastName = :lastName", Customer.class)
+//              .setParameter("lastName", lastName)
+//              .getResultList();
+```
+
+**Real-World Scenario:**
+[cite\_start]At CGI, you optimized database performance using Hibernate ORM and Spring Data JPA[cite: 85]. To fetch a user from the database, you would simply define a `UserRepository` interface extending `JpaRepository`. To find a user by their email, you would add the method `Optional<User> findByEmail(String email);`. Spring Data JPA provides the entire implementation for this method at runtime, saving you from writing any boilerplate DAO code.
+
+-----
+
+### **4. What is Spring Security and how does it work?**
+
+**Technical Explanation:**
+**Spring Security** is a powerful and highly customizable framework that provides both **authentication** (who are you?) and **authorization** (what are you allowed to do?) for Java applications. It is built around a chain of servlet filters. When an HTTP request comes in, it passes through this filter chain, where each filter has a specific responsibility, such as handling CSRF protection, session management, or authenticating credentials. The core components include the `SecurityFilterChain`, `AuthenticationManager`, and `AccessDecisionManager`. It supports a vast range of authentication mechanisms, including form-based login, Basic Auth, OAuth2, and JWT, and enables method-level security using annotations like `@PreAuthorize`.
+
+> **Kid-Friendly Explanation:** 👮‍♂️
+> Spring Security is like the complete security system for an exclusive clubhouse. When you try to enter, a guard at the door (**Authentication**) checks your ID to make sure you're a member. Once you're inside, there are other guards (**Authorization**) who check your membership level to see if you're allowed into special areas, like the VIP lounge or the swimming pool. The whole system is a chain of checkpoints you have to pass through.
+
+**Visualization:**
+
+```mermaid
+graph LR
+    A[HTTP Request] --> B[Security Filter Chain];
+    subgraph Security Filter Chain
+        direction LR
+        F1[CSRF Filter] --> F2[CORS Filter] --> F3[Authn Filter (JWT/Session)] --> F4[Authz Filter];
+    end
+    B --> C{Authenticated & Authorized?};
+    C -->|Yes| D[Controller/Endpoint];
+    C -->|No| E[Access Denied (401/403)];
+```
+
+**Real-World Scenario:**
+[cite\_start]You implemented secure authentication using Spring Security with JWT[cite: 82]. In this setup, a user logs in with credentials. Spring Security authenticates them and, upon success, generates a JWT. For all subsequent requests, the client includes this JWT in the `Authorization` header. A custom JWT filter in the Spring Security chain intercepts each request, validates the token's signature and expiration, and sets the user's authentication context, allowing them to access protected API endpoints based on the roles defined in the token.
+
+-----
+
+## JavaScript Libraries
+
+### **1. What is jQuery and what problems did it solve?**
+
+**Technical Explanation:**
+**jQuery** is a fast, small, and feature-rich JavaScript library designed to simplify client-side scripting of HTML. Its primary purpose was to make it much easier to navigate and manipulate the HTML DOM (Document Object Model), handle events, create animations, and perform Ajax requests. Before jQuery, developers had to write verbose and often inconsistent JavaScript code to handle differences between web browsers (like Internet Explorer, Firefox, and Chrome). jQuery provided a simple, cross-browser compatible API, encapsulated by its famous `$` function, allowing developers to "write less, do more."
+
+> **Kid-Friendly Explanation:** 🧙
+> Imagine every web browser speaks a slightly different dialect of a language. To tell a button to turn blue, you had to write separate, long sentences for each browser. jQuery is like a book of magic spells. You just say one short spell, `$('button').makeBlue()`, and jQuery automatically translates it into the correct long sentence for whichever browser is listening.
+
+**Code Example:**
+
+```javascript
+// Vanilla JavaScript to add a class to all paragraphs
+const paragraphs = document.querySelectorAll('p');
+for (let i = 0; i < paragraphs.length; i++) {
+  paragraphs[i].classList.add('highlight');
+}
+
+// The same thing with jQuery
+$('p').addClass('highlight');
+```
+
+**Real-World Scenario:**
+[cite\_start]In your experience, you used jQuery to speed up application interfaces[cite: 43, 50]. A common use case would be creating an interactive form. When a user clicks a "Submit" button, a jQuery event handler `$('#submit-btn').click(...)` would prevent the default form submission, grab all the values from the input fields, validate them, and then send the data to a backend server using jQuery's `$.ajax()` method, all without a full page reload.
+
+-----
+
+### **2. What is Axios and why is it used in front-end applications?**
+
+**Technical Explanation:**
+**Axios** is a popular, promise-based HTTP client for both the browser and Node.js. It simplifies the process of making asynchronous HTTP requests to backend endpoints. Key features that make it popular are its easy-to-use API, automatic transformation of JSON data, the ability to intercept requests and responses to add headers or handle errors globally, and built-in client-side protection against Cross-Site Request Forgery (CSRF). Because it is promise-based, it integrates seamlessly with modern JavaScript async/await syntax.
+
+> **Kid-Friendly Explanation:** 📦
+> Imagine your web application is a restaurant kitchen and the server is the grocery store. Axios is your personal, super-reliable delivery driver. You just give Axios a shopping list (a request for data), and it drives to the store, picks up the items, and brings them back to you. It gives you a "tracking number" (a Promise) so you can do other things while you wait, and it lets you know as soon as the delivery has arrived.
+
+**Visualization:**
+
+```mermaid
+sequenceDiagram
+    participant FE as Front-End (React/Angular)
+    participant AX as Axios
+    participant BE as Back-End API
+
+    FE->>AX: axios.get('/api/users');
+    AX->>BE: GET /api/users HTTP Request;
+    BE-->>AX: HTTP Response (JSON data);
+    AX-->>FE: Returns Promise (resolves with data);
+    FE->>FE: Updates state with user data;
+```
+
+**Real--World Scenario:**
+[cite\_start]As stated in your resume, you used Axios in your ReactJS applications[cite: 93]. A typical scenario involves a React component that needs to display user data. Inside a `useEffect` hook, you would call `axios.get('/api/user/123')`. Axios handles the GET request. You would use `.then(response => ...)` or `await` to handle the successful response by setting the component's state with the user data, causing the UI to re-render and display the information.
+
+-----
+
+## Testing Frameworks
+
+### **1. What is TestNG and how does it differ from JUnit?**
+
+**Technical Explanation:**
+**TestNG** is a testing framework for Java that was inspired by JUnit but introduces more powerful and flexible features, making it particularly popular for integration and end-to-end testing. Key differences and advantages over JUnit 4 (though JUnit 5 has adopted many similar features) include:
+
+  * **Annotations:** TestNG has a richer set of annotations, including `@BeforeSuite` and `@AfterSuite`, which are useful for complex setup/teardown logic.
+  * **Data-Driven Testing:** Native support for data-driven tests using the `@DataProvider` annotation is more flexible than JUnit's parameterization.
+  * **Parallel Execution:** TestNG provides simple and powerful configuration for running tests in parallel at the method, class, or suite level.
+  * **Test Dependencies:** You can explicitly define dependencies between test methods, ensuring they run in a specific order (e.g., `testLogin` must run before `testCreatePost`).
+  * **Grouping:** Tests can be organized into groups, allowing you to run specific subsets like "smoke" or "regression" tests easily.
+
+> **Kid-Friendly Explanation:** 🏎️
+> If JUnit is a reliable family car for everyday testing, TestNG is like a high-performance race car. The family car is great, but the race car is built for more complex situations. It lets you run multiple races at once (parallel tests), requires you to win a qualifying race before entering the final (dependencies), and lets you group your races into different championships (test groups).
+
+**Code Example:**
+
+```java
+public class MyTest {
+
+    @DataProvider(name = "user-data")
+    public Object[][] userData() {
+        return new Object[][] {
+            {"admin", "password123"},
+            {"guest", "guestpass"},
+        };
+    }
+
+    @Test(dataProvider = "user-data")
+    public void testLogin(String username, String password) {
+        // Test logic using username and password
+        System.out.println("Testing login for: " + username);
+        Assert.assertTrue(performLogin(username, password));
+    }
+}
+```
+
+**Real-World Scenario:**
+[cite\_start]You used TestNG to enhance test scripts[cite: 111, 112]. A common use case is in a QA automation suite using Selenium. You could group tests as `@Test(groups = {"smoke", "login"})`. To run a quick sanity check, you would configure TestNG to execute only the "smoke" group. For a full regression, you run all tests. The `@DataProvider` would be used to test the login functionality with dozens of different valid and invalid user credentials from a single test method.
+
+-----
+
+### **2. What is Mockito and why is mocking essential for unit testing?**
+
+**Technical Explanation:**
+**Mockito** is a popular open-source mocking framework for Java. Its purpose is to facilitate **unit testing** by allowing you to create "mock" or "dummy" objects that simulate the behavior of real dependencies. This is essential for isolating the class or method you are testing (the "System Under Test"). By using mocks, you can:
+
+  * **Isolate Behavior:** Test a single class without needing a real database connection, network call, or other complex dependencies.
+  * **Control Scenarios:** Explicitly define the behavior of dependencies (e.g., "when this method is called, return this value" or "throw this exception").
+  * **Verify Interactions:** Check that your class correctly interacts with its dependencies (e.g., "verify that the `save` method was called exactly once").
+
+Core methods include `when(...).thenReturn(...)` for stubbing behavior and `verify(...)` for checking interactions.
+
+> **Kid-Friendly Explanation:** 🤖
+> Imagine you want to test if a new robot chef can correctly follow a recipe to make a pizza. To do this, you don't need a real, fully-stocked, expensive kitchen. Instead, you can use Mockito to give the chef pretend ingredients. You can tell your pretend oven, "When the chef puts the pizza in, pretend to bake it perfectly." You can tell your pretend cheese, "Pretend to melt." This way, you can test just the chef's recipe-following skills without worrying about whether the real oven is working or if you have real cheese.
+
+**Visualization:**
+
+```mermaid
+graph TD
+    A[Test Method] --> B[OrderService (System Under Test)];
+    B --> C[PaymentRepository (Real Dependency)];
+    B --> D[EmailService (Real Dependency)];
+
+    subgraph "With Mockito"
+        A2[Test Method] --> B2[OrderService (System Under Test)];
+        M1[Mock PaymentRepository] --> B2;
+        M2[Mock EmailService] --> B2;
+        A2 -->|Defines Behavior| M1 & M2;
+    end
+```
+
+**Real-World Scenario:**
+[cite\_start]In your role at CGI, you used Mockito for unit testing[cite: 83]. To test a `CustomerService` class that depends on a `CustomerRepository` to fetch data from a database, you would use `@Mock` to create a mock `CustomerRepository`. In your test for `getCustomerDetails`, you would stub the mock's behavior: `when(mockRepository.findById(1L)).thenReturn(Optional.of(testCustomer));`. Then you would call your service method and assert that it returns the correct customer details, effectively testing the service's logic in complete isolation from the database.
+
+-----
+
+## DevOps Tools & Methodologies
+
+### **1. What is Sonatype Nexus and what is its role in a CI/CD pipeline?**
+
+**Technical Explanation:**
+**Sonatype Nexus Repository** (often just called Nexus) is a universal artifact repository manager. It acts as a central, private source of truth for all the components, binaries, and build artifacts used in software development. Its key roles in a CI/CD pipeline are:
+
+  * **Dependency Caching:** It proxies public repositories like Maven Central and npmjs.org. This speeds up builds and ensures that builds don't fail if the public repository is down.
+  * **Hosting Internal Artifacts:** It provides hosted repositories to store your company's own build outputs (e.g., JARs, WARs, Docker images).
+  * **Standardization & Security:** It enforces standards by providing a single, approved source for dependencies. When integrated with Nexus Lifecycle, it can automatically scan for security vulnerabilities in the components you use.
+  * **Release Management:** It facilitates the promotion of artifacts from snapshot/development repositories to release repositories.
+
+> **Kid-Friendly Explanation:** 📚
+> Nexus is like a special, secure library for a team of LEGO builders. Instead of every builder ordering their own pieces from the giant LEGO store on the internet every time, the team has its own library. The library keeps copies of all the common LEGO pieces (proxying). It also has a special section for the unique, custom pieces the team builds themselves (hosting). This ensures everyone uses the same, approved pieces and makes building much faster and more reliable.
+
+**Visualization:**
+
+```mermaid
+graph LR
+    A[Developer] <--> B(Nexus Repository);
+    C[CI Server (Jenkins)] <--> B;
+
+    subgraph External Repositories
+        D[Maven Central];
+        E[npmjs.org];
+        F[Docker Hub];
+    end
+
+    B -- Proxy --> D;
+    B -- Proxy --> E;
+    B -- Proxy --> F;
+
+    B -- Hosts --> G[Internal Releases & Snapshots];
+```
+
+**Real-World Scenario:**
+[cite\_start]You used Nexus in your CI/CD process[cite: 17, 47]. A Jenkins job is triggered by a git commit. The job uses Maven to build a Spring Boot project. Maven is configured to resolve all dependencies from your company's Nexus instance. Nexus serves cached dependencies from Maven Central and any internal libraries from a hosted repository. After a successful build, Jenkins uses Maven to `deploy` the final JAR artifact to a "snapshots" or "releases" repository within Nexus, making it available for other teams or for deployment.
+
+-----
+
+### **2. What is JBoss / WildFly?**
+
+**Technical Explanation:**
+**JBoss Application Server (AS)**, now known as **WildFly**, is a Java-based, open-source application server. An application server provides a full runtime environment for enterprise-grade applications. While a simpler web server like Tomcat is primarily a servlet container for running web applications, a full application server like JBoss provides a much broader set of services as defined by the Jakarta EE (formerly Java EE) specification. These services include an EJB (Enterprise JavaBeans) container, JPA (Java Persistence API) integration, JTA (Java Transaction API) for distributed transactions, and JMS (Java Message Service) for messaging.
+
+> **Kid-Friendly Explanation:** 👨‍🍳
+> If Tomcat is a simple pizza oven (great for making pizzas/webpages), JBoss is an entire professional restaurant kitchen. The JBoss kitchen has the pizza oven, but it also has a walk-in freezer (database persistence), a head chef to coordinate complex orders (transactions), and an intercom system to send messages between the kitchen and the waiters (messaging). It's designed for making very large, complex meals (enterprise applications).
+
+**Visualization:**
+
+```mermaid
+graph TD
+    subgraph JBoss / WildFly Application Server
+        A[Web Container (Undertow)];
+        B[EJB Container];
+        C[JMS (Artemis)];
+        D[JTA (Narayana)];
+        E[JPA (Hibernate)];
+        F[CDI (Weld)];
+    end
+    G[Your Deployed App (.war/.ear)] --> A & B & C & D & E & F;
+```
+
+**Real-World Scenario:**
+[cite\_start]In your experience, you deployed applications to JBoss[cite: 54, 76]. A large-scale banking application might be deployed as an EAR (Enterprise Archive) file to a JBoss server. The application could use EJBs for its business logic, rely on JBoss's JTA manager to handle transactions that span across multiple databases (e.g., updating a customer's record and logging the transaction in an audit database simultaneously), and use JMS queues provided by JBoss to process tasks asynchronously.
+
+-----
+
+### **3. What is PCF (Pivotal Cloud Foundry)?**
+
+**Technical Explanation:**
+**Pivotal Cloud Foundry (PCF)**, now part of VMware Tanzu, is a structured, opinionated **Platform as a Service (PaaS)**. It provides a high level of abstraction for developers, allowing them to deploy and run applications without managing the underlying infrastructure (VMs, networking, Kubernetes). The core developer experience revolves around the `cf push` command. When a developer "pushes" their code, the platform uses **Buildpacks** to automatically detect the language (e.g., Java, Node.js), compile the code, provision the necessary runtime, and deploy the application as a container (using its Garden container engine). It also handles service binding, logging, health management, and routing automatically.
+
+> **Kid-Friendly Explanation:** 🚀
+> PCF is like a magical "Go Live" button for your application. You just write your code, and then you hit the `cf push` button. PCF instantly figures out what your app needs, builds it, puts it in a safe little box, and launches it into the cloud for everyone to use. It automatically gives it an address, makes sure it stays running, and even connects it to other services it might need, like a database. You don't have to worry about servers or wires; you just focus on your code.
+
+**Visualization:**
+
+```mermaid
+flowchart TD
+    A[Developer] -- `cf push my-app` --> B[Cloud Controller (API)];
+    B --> C[Buildpack Detection];
+    C --> D[Staging (Compile & Build)];
+    D --> E[Droplet (App + Runtime)];
+    B --> F[Diego (Scheduler)];
+    F --> G[Garden Container];
+    G --> H[Running App Instance];
+    I[GoRouter] -- Routes Traffic --> H;
+```
+
+**Real-World Scenario:**
+[cite\_start]Your resume mentions deploying microservices to PCF[cite: 68, 76]. As a developer at Agate Software, you would finish coding a Spring Boot microservice. You would then run `cf push` from your terminal. The PCF Java buildpack would recognize the `.jar` file, provide the correct JRE, and create a running instance. You could then use `cf bind-service` to connect it to a managed Kafka service from the marketplace. The platform handles all the scaling and health checks automatically.
+
+-----
+
+### **4. What is the 12-Factor App Methodology?**
+
+**Technical Explanation:**
+The **12-Factor App** is a methodology outlining a set of twelve best practices for building modern, scalable, and maintainable software-as-a-service (SaaS) applications. These principles are designed to enable applications to be built with portability and resilience, making them ideal for cloud-native environments. Key factors include:
+
+  * **I. Codebase:** One codebase tracked in version control, many deploys.
+  * **III. Config:** Store configuration in environment variables, strictly separating it from code.
+  * **IV. Backing Services:** Treat backing services (databases, caches, message queues) as attached resources, switchable via config.
+  * **VI. Processes:** Execute the app as one or more stateless, share-nothing processes.
+  * **VII. Port Binding:** Export services via port binding, making the app self-contained.
+  * **IX. Disposability:** Maximize robustness with fast startup and graceful shutdown. Processes can be started or stopped at a moment's notice.
+
+> **Kid-Friendly Explanation:** ✅
+> The 12-Factor App is a list of 12 golden rules for building your LEGO creations so they are strong, easy to fix, and easy to move. Rules like "Keep all your instructions in one folder," "Don't glue the pieces together" (so they are stateless and can be easily replaced), and "Make sure each part can be started and stopped quickly" help you build applications that work really well on modern cloud platforms.
+
+**Visualization:**
+
+```mermaid
+mindmap
+  root((12-Factor App))
+    Codebase
+      ::icon(fa fa-git)
+      One codebase, many deploys
+    Config
+      ::icon(fa fa-cogs)
+      Store in environment
+    Backing Services
+      ::icon(fa fa-database)
+      Treat as attached resources
+    Processes
+      ::icon(fa fa-retweet)
+      Stateless, share-nothing
+    Port Binding
+      ::icon(fa fa-network-wired)
+      Export services via ports
+    Disposability
+      ::icon(fa fa-power-off)
+      Fast startup, graceful shutdown
+```
+
+**Real-World Scenario:**
+[cite\_start]You converted a monolithic app to microservices using the 12-factor methodology[cite: 67]. An example of this is externalizing the database connection string. Instead of hardcoding it in a `application.properties` file inside the JAR (violating Factor III), you configure the Spring Boot service to read it from an environment variable (`SPRING_DATASOURCE_URL`). This makes the same application artifact deployable to any environment (dev, staging, prod) simply by changing the environment variable provided by the platform (like PCF or Kubernetes).
